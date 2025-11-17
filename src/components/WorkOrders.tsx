@@ -7,6 +7,7 @@ import { Input } from './ui/input';
 import { WorkOrderModal } from './WorkOrderModal';
 import { WorkOrderDetailModal } from './WorkOrderDetailModal';
 import { WorkOrderExitModal } from './WorkOrderExitModal';
+import { WorkOrderClosingModal } from './WorkOrderClosingModal';
 import {
   Select,
   SelectContent,
@@ -28,15 +29,17 @@ export type WorkOrder = {
   description: string;
   type: 'preventivo' | 'correctivo' | 'mejora' | 'evaluacion';
   priority: 'emergencia' | 'urgente' | 'programado' | 'mejora' | 'inspeccion';
-  status: 'pendiente' | 'programado' | 'ejecutado' | 'reprogramado' | 'no-ejecutado';
+  status: 'pendiente' | 'programado' | 'ejecutado' | 'cerrado' | 'reprogramado' | 'no-ejecutado';
   assignedTo?: string;
   exitData?: any; // Datos de salida / finalización de OT
+  closingData?: any; // Datos de cierre de OT
 };
 
 export function WorkOrders() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [exitModalOpen, setExitModalOpen] = useState(false);
+  const [closingModalOpen, setClosingModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<WorkOrder | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterPriority, setFilterPriority] = useState<string>('all');
@@ -156,6 +159,20 @@ export function WorkOrders() {
     setSelectedOrder(null);
   };
 
+  const handleOpenClosingModal = (order: WorkOrder) => {
+    setSelectedOrder(order);
+    setClosingModalOpen(true);
+  };
+
+  const handleClosingSubmit = (closingData: any) => {
+    const updatedOrders = workOrders.map((order) =>
+      order.id === closingData.id ? closingData : order
+    );
+    setWorkOrders(updatedOrders);
+    setClosingModalOpen(false);
+    setSelectedOrder(null);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header con búsqueda y filtros */}
@@ -267,7 +284,7 @@ export function WorkOrders() {
                     <Eye className="h-4 w-4" />
                     Ver detalles
                   </Button>
-                  {order.status !== 'ejecutado' && (
+                  {order.status !== 'ejecutado' && order.status !== 'cerrado' && (
                     <Button
                       variant="outline"
                       size="sm"
@@ -276,6 +293,17 @@ export function WorkOrders() {
                     >
                       <LogOut className="h-4 w-4" />
                       Finalizar
+                    </Button>
+                  )}
+                  {order.status === 'ejecutado' && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleOpenClosingModal(order)}
+                      className="gap-2 text-blue-600 hover:text-blue-700 border-blue-600 hover:bg-blue-50"
+                    >
+                      <CheckCircle className="h-4 w-4" />
+                      Cerrar
                     </Button>
                   )}
                 </div>
@@ -318,6 +346,18 @@ export function WorkOrders() {
             setSelectedOrder(null);
           }}
           onSubmit={handleExitSubmit}
+          workOrder={selectedOrder}
+        />
+      )}
+
+      {selectedOrder && (
+        <WorkOrderClosingModal
+          isOpen={closingModalOpen}
+          onClose={() => {
+            setClosingModalOpen(false);
+            setSelectedOrder(null);
+          }}
+          onSubmit={handleClosingSubmit}
           workOrder={selectedOrder}
         />
       )}

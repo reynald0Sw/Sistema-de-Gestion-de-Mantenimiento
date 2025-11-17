@@ -322,7 +322,7 @@ export function WorkOrderExitModal({
                   />
                 </div>
                 <div>
-                  <Label className="text-xs">OT</Label>
+                  <Label className="text-xs">Orden de Trabajo (OT)</Label>
                   <Input
                     disabled
                     value={workOrder?.id || ""}
