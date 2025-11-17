@@ -248,7 +248,7 @@ export function Inventory() {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <Button className="gap-2">
+            <Button className="gap-2" onClick={() => alert('Funcionalidad: Agregar nuevo repuesto')}>
               <Plus className="h-4 w-4" />
               Nuevo Repuesto
             </Button>
@@ -303,10 +303,10 @@ export function Inventory() {
                       <p className="text-sm">{part.supplier}</p>
                     </div>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm" className="flex-1">
+                      <Button variant="outline" size="sm" className="flex-1" onClick={() => alert(`Ver historial: ${part.name}`)}>
                         Ver historial
                       </Button>
-                      <Button size="sm" className="flex-1">
+                      <Button size="sm" className="flex-1" onClick={() => alert(`Solicitud de compra: ${part.name}`)}>
                         Solicitar compra
                       </Button>
                     </div>
@@ -329,7 +329,7 @@ export function Inventory() {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <Button className="gap-2">
+            <Button className="gap-2" onClick={() => alert('Funcionalidad: Agregar nuevo proveedor')}>
               <Plus className="h-4 w-4" />
               Nuevo Proveedor
             </Button>
@@ -379,7 +379,7 @@ export function Inventory() {
                     <p className="text-sm text-gray-600">Contacto principal</p>
                     <p className="text-sm">{supplier.contact}</p>
                   </div>
-                  <Button variant="outline" className="w-full">
+                  <Button variant="outline" className="w-full" onClick={() => alert(`Historial de compras: ${supplier.name}`)}>
                     Ver historial de compras
                   </Button>
                 </CardContent>

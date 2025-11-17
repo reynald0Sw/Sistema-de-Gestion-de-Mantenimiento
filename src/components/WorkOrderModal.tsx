@@ -26,6 +26,9 @@ export function WorkOrderModal({ isOpen, onClose, onSubmit }: WorkOrderModalProp
     area: '',
     equipment: '',
     description: '',
+    issueDate: '',
+    issueTime: '',
+    deliveryDate: '',
     type: 'correctivo' as const,
     priority: 'programado' as const,
   });
@@ -45,6 +48,9 @@ export function WorkOrderModal({ isOpen, onClose, onSubmit }: WorkOrderModalProp
       area: '',
       equipment: '',
       description: '',
+      issueDate: '',
+      issueTime: '',
+      deliveryDate: '',
       type: 'correctivo',
       priority: 'programado',
     });
@@ -59,6 +65,26 @@ export function WorkOrderModal({ isOpen, onClose, onSubmit }: WorkOrderModalProp
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+             <div className="space-y-2">
+              <Label htmlFor="issueDate">Fecha de emisión *</Label>
+              <Input
+                id="issueDate"
+                type="date"
+                required
+                value={formData.issueDate}
+                onChange={(e) => setFormData({ ...formData, issueDate: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="issueTime">Hora *</Label>
+              <Input
+                id="issueTime"
+                type="time"
+                required
+                value={formData.issueTime}
+                onChange={(e) => setFormData({ ...formData, issueTime: e.target.value })}
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="requestor">Solicitante *</Label>
               <Input
@@ -77,8 +103,9 @@ export function WorkOrderModal({ isOpen, onClose, onSubmit }: WorkOrderModalProp
                 onChange={(e) => setFormData({ ...formData, department: e.target.value })}
               />
             </div>
+           
             <div className="space-y-2">
-              <Label htmlFor="area">Área / Línea *</Label>
+              <Label htmlFor="area">Área / Línea Afectada*</Label>
               <Input
                 id="area"
                 required
@@ -95,25 +122,20 @@ export function WorkOrderModal({ isOpen, onClose, onSubmit }: WorkOrderModalProp
                 onChange={(e) => setFormData({ ...formData, equipment: e.target.value })}
               />
             </div>
+
+             {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="type">Tipo de Mantenimiento *</Label>
-              <Select
-                value={formData.type}
-                onValueChange={(value: any) => setFormData({ ...formData, type: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="preventivo">Mantenimiento Preventivo</SelectItem>
-                  <SelectItem value="correctivo">Mantenimiento Correctivo</SelectItem>
-                  <SelectItem value="mejora">Mejora Técnica</SelectItem>
-                  <SelectItem value="evaluacion">Evaluación Técnica</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label htmlFor="deliveryDate">Fecha de solución/entrega</Label>
+              <Input
+                id="deliveryDate"
+                type="date"
+                value={formData.deliveryDate}
+                onChange={(e) => setFormData({ ...formData, deliveryDate: e.target.value })}
+              />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="priority">Prioridad *</Label>
+          </div> */}
+           <div className="space-y-2">
+              <Label htmlFor="priority">Tipo de Solicitud *</Label>
               <Select
                 value={formData.priority}
                 onValueChange={(value: any) => setFormData({ ...formData, priority: value })}
@@ -130,7 +152,26 @@ export function WorkOrderModal({ isOpen, onClose, onSubmit }: WorkOrderModalProp
                 </SelectContent>
               </Select>
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="type">Tipo de Trabajo (A completar por mantenimiento) *</Label>
+              <Select
+                value={formData.type}
+                onValueChange={(value: any) => setFormData({ ...formData, type: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="preventivo">Mantenimiento Preventivo</SelectItem>
+                  <SelectItem value="correctivo">Mantenimiento Correctivo</SelectItem>
+                  <SelectItem value="mejora">Mejora Técnica</SelectItem>
+                  <SelectItem value="evaluacion">Evaluación Técnica</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+           
           </div>
+         
           <div className="space-y-2">
             <Label htmlFor="description">Descripción / Detalle de la Falla *</Label>
             <Textarea
@@ -139,7 +180,8 @@ export function WorkOrderModal({ isOpen, onClose, onSubmit }: WorkOrderModalProp
               rows={4}
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Describa detalladamente el problema o la solicitud de mantenimiento..."
+              placeholder="Descripción clara y precisa del problema detectado, anomalía o necesidad técnica. 
+"
             />
           </div>
           <DialogFooter>

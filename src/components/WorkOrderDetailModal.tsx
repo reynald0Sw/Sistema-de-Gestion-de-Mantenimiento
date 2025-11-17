@@ -147,10 +147,10 @@ export function WorkOrderDetailModal({ isOpen, onClose, workOrder }: WorkOrderDe
               Cerrar
             </Button>
             {workOrder.status === 'pendiente' && (
-              <Button>Asignar Técnico</Button>
+              <Button onClick={() => alert('Funcionalidad: Asignar técnico')}>Asignar Técnico</Button>
             )}
             {workOrder.status === 'programado' && (
-              <Button>Iniciar Ejecución</Button>
+              <Button onClick={() => alert('Funcionalidad: Iniciar ejecución')}>Iniciar Ejecución</Button>
             )}
           </div>
         </div>

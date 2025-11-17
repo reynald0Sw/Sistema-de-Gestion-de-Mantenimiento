@@ -178,7 +178,7 @@ export function MaintenanceSchedule() {
                       <Badge className={getStatusColor(task.status)}>
                         {task.status}
                       </Badge>
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" onClick={() => alert(`Detalles de: ${task.id}`)}>
                         Ver detalles
                       </Button>
                     </div>

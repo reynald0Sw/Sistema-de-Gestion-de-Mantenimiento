@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { Plus, Search, Filter, Eye, Edit, CheckCircle } from 'lucide-react';
+import { Plus, Search, Filter, Eye, Edit, CheckCircle, LogOut } from 'lucide-react';
 import { Input } from './ui/input';
 import { WorkOrderModal } from './WorkOrderModal';
 import { WorkOrderDetailModal } from './WorkOrderDetailModal';
+import { WorkOrderExitModal } from './WorkOrderExitModal';
 import {
   Select,
   SelectContent,
@@ -18,6 +19,9 @@ export type WorkOrder = {
   id: string;
   requestor: string;
   date: string;
+  issueDate?: string;
+  issueTime?: string;
+  deliveryDate?: string;
   department: string;
   area: string;
   equipment: string;
@@ -26,11 +30,13 @@ export type WorkOrder = {
   priority: 'emergencia' | 'urgente' | 'programado' | 'mejora' | 'inspeccion';
   status: 'pendiente' | 'programado' | 'ejecutado' | 'reprogramado' | 'no-ejecutado';
   assignedTo?: string;
+  exitData?: any; // Datos de salida / finalización de OT
 };
 
 export function WorkOrders() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [exitModalOpen, setExitModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<WorkOrder | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterPriority, setFilterPriority] = useState<string>('all');
@@ -41,6 +47,9 @@ export function WorkOrders() {
       id: 'OT-2024-001',
       requestor: 'Carlos Mendoza',
       date: '2024-11-10T08:30:00',
+      issueDate: '2024-11-10',
+      issueTime: '08:30',
+      deliveryDate: '2024-11-11',
       department: 'Producción',
       area: 'Línea 3',
       equipment: 'Torno CNC-001',
@@ -54,6 +63,8 @@ export function WorkOrders() {
       id: 'OT-2024-002',
       requestor: 'María González',
       date: '2024-11-11T10:15:00',
+      issueDate: '2024-11-11',
+      issueTime: '10:15',
       department: 'Mantenimiento',
       area: 'Compresores',
       equipment: 'Compresor A-205',
@@ -66,6 +77,8 @@ export function WorkOrders() {
       id: 'OT-2024-003',
       requestor: 'Roberto Silva',
       date: '2024-11-09T14:20:00',
+      issueDate: '2024-11-09',
+      issueTime: '14:20',
       department: 'Producción',
       area: 'Línea 1',
       equipment: 'Fresadora F-102',
@@ -129,6 +142,20 @@ export function WorkOrders() {
     setDetailModalOpen(true);
   };
 
+  const handleOpenExitModal = (order: WorkOrder) => {
+    setSelectedOrder(order);
+    setExitModalOpen(true);
+  };
+
+  const handleExitSubmit = (exitData: any) => {
+    const updatedOrders = workOrders.map((order) =>
+      order.id === exitData.id ? exitData : order
+    );
+    setWorkOrders(updatedOrders);
+    setExitModalOpen(false);
+    setSelectedOrder(null);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header con búsqueda y filtros */}
@@ -183,8 +210,14 @@ export function WorkOrders() {
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
                 <div>
-                  <CardTitle className="text-lg">{order.id}</CardTitle>
-                  <p className="text-sm text-gray-600 mt-1">{order.equipment}</p>
+                    <CardTitle className="text-lg">{order.id}</CardTitle>
+                    <p className="text-sm text-gray-600 mt-1">{order.equipment}</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Emitida: {order.issueDate ? order.issueDate : new Date(order.date).toLocaleDateString()} {order.issueTime ? order.issueTime : ''}
+                      {order.deliveryDate && (
+                        <span> • Entrega: {order.deliveryDate}</span>
+                      )}
+                    </p>
                 </div>
                 <Badge className={getPriorityColor(order.priority)}>
                   {order.priority}
@@ -220,19 +253,32 @@ export function WorkOrders() {
                   <p>{order.assignedTo}</p>
                 </div>
               )}
-              <div className="flex items-center justify-between pt-2 border-t">
+              <div className="flex items-center justify-between pt-2 border-t gap-2">
                 <Badge className={getStatusColor(order.status)}>
                   {order.status}
                 </Badge>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleViewDetails(order)}
-                  className="gap-2"
-                >
-                  <Eye className="h-4 w-4" />
-                  Ver detalles
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleViewDetails(order)}
+                    className="gap-2"
+                  >
+                    <Eye className="h-4 w-4" />
+                    Ver detalles
+                  </Button>
+                  {order.status !== 'ejecutado' && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleOpenExitModal(order)}
+                      className="gap-2 text-green-600 hover:text-green-700 border-green-600 hover:bg-green-50"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Finalizar
+                    </Button>
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -260,6 +306,18 @@ export function WorkOrders() {
             setDetailModalOpen(false);
             setSelectedOrder(null);
           }}
+          workOrder={selectedOrder}
+        />
+      )}
+
+      {selectedOrder && (
+        <WorkOrderExitModal
+          isOpen={exitModalOpen}
+          onClose={() => {
+            setExitModalOpen(false);
+            setSelectedOrder(null);
+          }}
+          onSubmit={handleExitSubmit}
           workOrder={selectedOrder}
         />
       )}

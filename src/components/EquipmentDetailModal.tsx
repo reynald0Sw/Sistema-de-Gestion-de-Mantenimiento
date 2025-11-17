@@ -304,7 +304,7 @@ export function EquipmentDetailModal({ isOpen, onClose, equipment }: EquipmentDe
           <Button variant="outline" onClick={onClose}>
             Cerrar
           </Button>
-          <Button>Editar Equipo</Button>
+          <Button onClick={() => alert('Funcionalidad: Editar equipo')}>Editar Equipo</Button>
         </div>
       </DialogContent>
     </Dialog>

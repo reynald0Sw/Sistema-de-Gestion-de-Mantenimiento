@@ -107,7 +107,7 @@ export function Reports() {
               </SelectContent>
             </Select>
 
-            <Button className="gap-2">
+            <Button className="gap-2" onClick={() => alert('Funcionalidad: Exportar reporte en PDF')}>
               <Download className="h-4 w-4" />
               Exportar PDF
             </Button>

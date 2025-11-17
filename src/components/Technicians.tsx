@@ -156,7 +156,7 @@ export function Technicians() {
 
       {/* Botón para agregar técnico */}
       <div className="flex justify-end">
-        <Button className="gap-2">
+        <Button className="gap-2" onClick={() => alert('Funcionalidad: Agregar nuevo técnico')}>
           <Plus className="h-4 w-4" />
           Nuevo Técnico
         </Button>
@@ -224,10 +224,10 @@ export function Technicians() {
               </div>
 
               <div className="flex gap-2 pt-2">
-                <Button variant="outline" size="sm" className="flex-1">
+                <Button variant="outline" size="sm" className="flex-1" onClick={() => alert(`Ver perfil de ${tech.name}`)}>
                   Ver perfil
                 </Button>
-                <Button size="sm" className="flex-1" disabled={tech.status !== 'disponible'}>
+                <Button size="sm" className="flex-1" disabled={tech.status !== 'disponible'} onClick={() => alert(`Asignar tarea a ${tech.name}`)}>
                   Asignar tarea
                 </Button>
               </div>
