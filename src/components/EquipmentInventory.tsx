@@ -539,7 +539,7 @@ export default function EquipmentInventory() {
           setEditingSectionId(null);
         }}
       >
-        <DialogContent className="!fixed !inset-20 !w-[calc(100vw-160px)] !h-[calc(100vh-160px)] flex flex-col rounded-lg shadow-2xl bg-white">
+        <DialogContent className="w-full max-w-6xl max-h-[90vh] flex flex-col rounded-lg shadow-2xl bg-white overflow-hidden">
           <DialogHeader className="px-6 pt-6 pb-2 border-b">
             <DialogTitle className="text-xl font-bold">
               {editingItem?.id ? "Editar" : "Nuevo"} Item
@@ -637,7 +637,7 @@ export default function EquipmentInventory() {
           setSectionLinea("");
         }}
       >
-        <DialogContent className="!fixed !inset-20 !w-[calc(100vw-160px)] !h-[calc(100vh-160px)] flex flex-col rounded-lg shadow-2xl bg-white">
+        <DialogContent className="w-full max-w-6xl max-h-[90vh] flex flex-col rounded-lg shadow-2xl bg-white overflow-hidden">
           <DialogHeader className="px-6 pt-6 pb-2 border-b">
             <DialogTitle className="text-xl font-bold">
               {editingSection ? "Editar Sección" : "Nueva Sección"}

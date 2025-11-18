@@ -202,7 +202,7 @@ export function MachinePerformanceModal({ isOpen, onClose, onSubmit }: Props) {
         onClose();
       }}
     >
-      <DialogContent className="!fixed !inset-6 !w-[calc(100vw-48px)] !h-[calc(100vh-48px)] flex flex-col rounded-lg shadow-2xl bg-white">
+      <DialogContent className="w-full max-w-5xl max-h-[90vh] flex flex-col rounded-lg shadow-2xl bg-white overflow-hidden">
         <DialogHeader className="px-6 pt-6 pb-2 border-b">
           <DialogTitle className="flex items-center justify-between text-2xl font-bold">
             <div>

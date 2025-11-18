@@ -575,7 +575,7 @@ export default function EquipmentCoding() {
           setViewOnly(false);
         }}
       >
-        <DialogContent className="!fixed !inset-16 !w-[calc(100vw-128px)] !h-[calc(100vh-128px)] flex flex-col rounded-lg shadow-2xl bg-white">
+        <DialogContent className="w-full max-w-6xl max-h-[90vh] flex flex-col rounded-lg shadow-2xl bg-white overflow-hidden">
           <DialogHeader className="px-6 pt-6 pb-2 border-b">
             <DialogTitle className="text-xl font-bold">
               {editing?.id ? "Editar" : "Nuevo"} Código de Equipo

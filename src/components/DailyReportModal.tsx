@@ -182,7 +182,7 @@ export function DailyReportModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="w-screen max-w-[1800px] max-h-[90vh] p-3 overflow-y-auto">
+      <DialogContent className="w-full max-w-[1800px] max-h-[90vh] p-3 overflow-y-auto">
         <DialogHeader className="pb-4 border-b">
           <DialogTitle className="flex items-center justify-between text-2xl">
             <span>📋 Reporte Diario de Trabajos</span>
