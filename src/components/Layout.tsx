@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 import {
   LayoutDashboard,
   ClipboardList,
@@ -7,12 +7,19 @@ import {
   Package,
   Users,
   BarChart3,
-  Menu
-} from 'lucide-react';
-import { Button } from './ui/button';
-import { useState } from 'react';
+  Menu,
+} from "lucide-react";
+import { Button } from "./ui/button";
+import { useState } from "react";
 
-type View = 'dashboard' | 'work-orders' | 'maintenance-schedule' | 'equipment' | 'inventory' | 'technicians' | 'reports';
+type View =
+  | "dashboard"
+  | "work-orders"
+  | "maintenance-schedule"
+  | "equipment"
+  | "inventory"
+  | "technicians"
+  | "reports";
 
 interface LayoutProps {
   children: ReactNode;
@@ -24,13 +31,13 @@ export function Layout({ children, currentView, onViewChange }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'work-orders', label: 'Órdenes de Trabajo', icon: ClipboardList },
-    { id: 'maintenance-schedule', label: 'Programacion', icon: Calendar },
-    { id: 'equipment', label: 'Equipos', icon: Wrench },
-    { id: 'inventory', label: 'Repuestos', icon: Package },
-    { id: 'technicians', label: 'Técnicos', icon: Users },
-    { id: 'reports', label: 'Reportes', icon: BarChart3 },
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { id: "work-orders", label: "Órdenes de Trabajo", icon: ClipboardList },
+    { id: "maintenance-schedule", label: "Planificacion", icon: Calendar },
+    { id: "equipment", label: "Equipos", icon: Wrench },
+    { id: "inventory", label: "Repuestos", icon: Package },
+    { id: "technicians", label: "Técnicos", icon: Users },
+    { id: "reports", label: "Reportes", icon: BarChart3 },
   ];
 
   return (
@@ -38,7 +45,7 @@ export function Layout({ children, currentView, onViewChange }: LayoutProps) {
       {/* Sidebar */}
       <aside
         className={`bg-slate-900 text-white transition-all duration-300 ${
-          sidebarOpen ? 'w-64' : 'w-20'
+          sidebarOpen ? "w-64" : "w-20"
         }`}
       >
         <div className="flex items-center justify-between p-4 border-b border-slate-700">
@@ -61,8 +68,8 @@ export function Layout({ children, currentView, onViewChange }: LayoutProps) {
                 onClick={() => onViewChange(item.id as View)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-1 transition-colors ${
                   currentView === item.id
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-300 hover:bg-slate-800'
+                    ? "bg-blue-600 text-white"
+                    : "text-gray-300 hover:bg-slate-800"
                 }`}
               >
                 <Icon className="h-5 w-5 flex-shrink-0" />
@@ -78,7 +85,8 @@ export function Layout({ children, currentView, onViewChange }: LayoutProps) {
         <header className="bg-white border-b border-gray-200 px-6 py-4">
           <div className="flex items-center justify-between">
             <h1>
-              {menuItems.find((item) => item.id === currentView)?.label || 'Dashboard'}
+              {menuItems.find((item) => item.id === currentView)?.label ||
+                "Dashboard"}
             </h1>
             <div className="flex items-center gap-4">
               <span className="text-gray-600">Usuario: Admin</span>

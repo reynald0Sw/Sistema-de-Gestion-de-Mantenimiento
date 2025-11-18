@@ -10,6 +10,10 @@ import {
   Edit,
   CheckCircle,
   LogOut,
+  Clock,
+  TrendingUp,
+  AlertCircle,
+  Package,
 } from "lucide-react";
 import { Input } from "./ui/input";
 import { WorkOrderModal } from "./WorkOrderModal";
@@ -35,15 +39,18 @@ export type WorkOrder = {
   area: string;
   equipment: string;
   description: string;
+  projectCode?: string;
   type: "preventivo" | "correctivo" | "mejora" | "evaluacion";
   priority: "emergencia" | "urgente" | "programado" | "mejora" | "inspeccion";
   status:
     | "pendiente"
     | "programado"
+    | "en-proceso"
     | "ejecutado"
     | "cerrado"
     | "reprogramado"
-    | "no-ejecutado";
+    | "no-ejecutado"
+    | "rechazado";
   assignedTo?: string;
   exitData?: any; // Datos de salida / finalización de OT
   closingData?: any; // Datos de cierre de OT
@@ -62,6 +69,7 @@ export function WorkOrders() {
   const [workOrders, setWorkOrders] = useState<WorkOrder[]>([
     {
       id: "OT-2024-001",
+      projectCode: "PROJ-A1",
       requestor: "Carlos Mendoza",
       date: "2024-11-10T08:30:00",
       issueDate: "2024-11-10",
@@ -78,6 +86,7 @@ export function WorkOrders() {
     },
     {
       id: "OT-2024-002",
+      projectCode: "PROJ-B2",
       requestor: "María González",
       date: "2024-11-11T10:15:00",
       issueDate: "2024-11-11",
@@ -92,6 +101,7 @@ export function WorkOrders() {
     },
     {
       id: "OT-2024-003",
+      projectCode: "PROJ-C3",
       requestor: "Roberto Silva",
       date: "2024-11-09T14:20:00",
       issueDate: "2024-11-09",
@@ -104,6 +114,85 @@ export function WorkOrders() {
       priority: "emergencia",
       status: "ejecutado",
       assignedTo: "Pedro Ramírez",
+    },
+    {
+      id: "OT-2024-004",
+      projectCode: "PROJ-D4",
+      requestor: "Ana Torres",
+      date: "2024-11-13T09:00:00",
+      issueDate: "2024-11-13",
+      issueTime: "09:00",
+      department: "Producción",
+      area: "Línea 2",
+      equipment: "Línea de Ensamblaje A",
+      description: "Ajuste de tensores y calibración",
+      type: "preventivo",
+      priority: "programado",
+      status: "en-proceso",
+      assignedTo: "Marcos Díaz",
+    },
+    {
+      id: "OT-2024-005",
+      projectCode: "PROJ-E5",
+      requestor: "Jorge Ruiz",
+      date: "2024-11-14T11:30:00",
+      issueDate: "2024-11-14",
+      issueTime: "11:30",
+      department: "Mantenimiento",
+      area: "Calderas",
+      equipment: "Caldera C-12",
+      description: "Inspección de seguridad y reemplazo de válvula",
+      type: "correctivo",
+      priority: "urgente",
+      status: "reprogramado",
+      assignedTo: "Lucía Fernández",
+    },
+    {
+      id: "OT-2024-006",
+      projectCode: "PROJ-F6",
+      requestor: "Luis Martínez",
+      date: "2024-11-12T07:45:00",
+      issueDate: "2024-11-12",
+      issueTime: "07:45",
+      department: "Producción",
+      area: "Línea 4",
+      equipment: "Prensa P-201",
+      description: "Parada por bloque de seguridad activado",
+      type: "correctivo",
+      priority: "emergencia",
+      status: "no-ejecutado",
+    },
+    {
+      id: "OT-2024-007",
+      projectCode: "PROJ-G7",
+      requestor: "Sofía Ramírez",
+      date: "2024-11-15T13:00:00",
+      issueDate: "2024-11-15",
+      issueTime: "13:00",
+      department: "Calidad",
+      area: "Línea 5",
+      equipment: "Medidor M-77",
+      description: "Revisión por lectura fuera de tolerancia",
+      type: "evaluacion",
+      priority: "programado",
+      status: "rechazado",
+      assignedTo: "",
+    },
+    {
+      id: "OT-2024-008",
+      projectCode: "PROJ-H8",
+      requestor: "Pedro Gómez",
+      date: "2024-11-16T08:30:00",
+      issueDate: "2024-11-16",
+      issueTime: "08:30",
+      department: "Mantenimiento",
+      area: "Línea 3",
+      equipment: "Torno CNC-002",
+      description: "Cambio de herramienta y prueba de corte",
+      type: "mejora",
+      priority: "programado",
+      status: "programado",
+      assignedTo: "Alberto Ruiz",
     },
   ]);
 
@@ -141,6 +230,35 @@ export function WorkOrders() {
     return labels[type as keyof typeof labels] || type;
   };
 
+  // Conteos para KPIs (estilo Dashboard)
+  const countProgramados = workOrders.filter(
+    (o) => o.status === "programado"
+  ).length;
+  const countEnProceso =
+    workOrders.filter((o) => o.status === "en-proceso").length || 0;
+  const countCompletados = workOrders.filter(
+    (o) => o.status === "ejecutado"
+  ).length;
+  const countReprogramados = workOrders.filter(
+    (o) => o.status === "reprogramado"
+  ).length;
+  const countRechazados =
+    workOrders.filter((o) => o.status === "rechazado").length || 0;
+
+  const getStatusLabel = (s: string) => {
+    const map: Record<string, string> = {
+      pendiente: "Pendiente",
+      programado: "Programado",
+      "en-proceso": "En Proceso",
+      ejecutado: "Completado",
+      reprogramado: "Reprogramado",
+      "no-ejecutado": "No Ejecutado",
+      rechazado: "Rechazado",
+      cerrado: "Cerrado",
+    };
+    return map[s] || s;
+  };
+
   const filteredOrders = workOrders.filter((order) => {
     const matchesStatus =
       filterStatus === "all" || order.status === filterStatus;
@@ -149,6 +267,8 @@ export function WorkOrders() {
     const matchesSearch =
       searchTerm === "" ||
       order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (order.projectCode &&
+        order.projectCode.toLowerCase().includes(searchTerm.toLowerCase())) ||
       order.equipment.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.description.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesStatus && matchesPriority && matchesSearch;
@@ -193,6 +313,88 @@ export function WorkOrders() {
 
   return (
     <div className="space-y-6">
+      {/* KPIs estilo Dashboard: fila horizontal (no wrapping) */}
+      <div className="flex gap-4 overflow-x-auto pb-2">
+        <Card className="min-w-[200px] flex-shrink-0">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600">Programados</p>
+                <div className="flex items-baseline gap-2 mt-2">
+                  <span className="text-3xl">{countProgramados}</span>
+                </div>
+              </div>
+              <div className="p-3 rounded-lg bg-blue-100">
+                <TrendingUp className="h-6 w-6 text-blue-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="min-w-[200px] flex-shrink-0">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600">En Proceso</p>
+                <div className="flex items-baseline gap-2 mt-2">
+                  <span className="text-3xl">{countEnProceso}</span>
+                </div>
+              </div>
+              <div className="p-3 rounded-lg bg-yellow-100">
+                <Clock className="h-6 w-6 text-yellow-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="min-w-[200px] flex-shrink-0">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600">Completados</p>
+                <div className="flex items-baseline gap-2 mt-2">
+                  <span className="text-3xl">{countCompletados}</span>
+                </div>
+              </div>
+              <div className="p-3 rounded-lg bg-green-100">
+                <CheckCircle className="h-6 w-6 text-green-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="min-w-[200px] flex-shrink-0">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600">Reprogramados</p>
+                <div className="flex items-baseline gap-2 mt-2">
+                  <span className="text-3xl">{countReprogramados}</span>
+                </div>
+              </div>
+              <div className="p-3 rounded-lg bg-purple-100">
+                <Package className="h-6 w-6 text-purple-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="min-w-[200px] flex-shrink-0">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600">Rechazados</p>
+                <div className="flex items-baseline gap-2 mt-2">
+                  <span className="text-3xl">{countRechazados}</span>
+                </div>
+              </div>
+              <div className="p-3 rounded-lg bg-gray-100">
+                <AlertCircle className="h-6 w-6 text-gray-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
       {/* Header con búsqueda y filtros */}
       <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
         <div className="flex-1 flex gap-3 flex-wrap">
@@ -213,9 +415,11 @@ export function WorkOrders() {
               <SelectItem value="all">Todos los estados</SelectItem>
               <SelectItem value="pendiente">Pendiente</SelectItem>
               <SelectItem value="programado">Programado</SelectItem>
+              <SelectItem value="en-proceso">En Proceso</SelectItem>
               <SelectItem value="ejecutado">Ejecutado</SelectItem>
               <SelectItem value="reprogramado">Reprogramado</SelectItem>
-              <SelectItem value="no-ejecutado">No ejecutado</SelectItem>
+              {/* <SelectItem value="no-ejecutado">No ejecutado</SelectItem> */}
+              <SelectItem value="rechazado">Rechazado</SelectItem>
             </SelectContent>
           </Select>
           <Select value={filterPriority} onValueChange={setFilterPriority}>
@@ -245,9 +449,17 @@ export function WorkOrders() {
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
                 <div>
-                  <CardTitle className="text-lg">{order.id}</CardTitle>
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-lg">{order.id}</CardTitle>
+                    <div className="text-xs text-gray-500">
+                      {order.projectCode ?? "—"}
+                    </div>
+                  </div>
                   <p className="text-sm text-gray-600 mt-1">
                     {order.equipment}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Dept: {order.department} • Área: {order.area}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
                     Emitida:{" "}
@@ -296,7 +508,7 @@ export function WorkOrders() {
               )}
               <div className="flex items-center justify-between pt-2 border-t gap-2">
                 <Badge className={getStatusColor(order.status)}>
-                  {order.status}
+                  {getStatusLabel(order.status)}
                 </Badge>
                 <div className="flex gap-2">
                   <Button
