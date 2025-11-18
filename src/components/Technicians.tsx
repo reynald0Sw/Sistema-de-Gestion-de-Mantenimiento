@@ -1,8 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Badge } from './ui/badge';
-import { Button } from './ui/button';
-import { Avatar, AvatarFallback } from './ui/avatar';
-import { User, Wrench, Clock, CheckCircle, Plus } from 'lucide-react';
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
+import { Avatar, AvatarFallback } from "./ui/avatar";
+import { User, Wrench, Clock, CheckCircle, Plus, FileText } from "lucide-react";
+import { DailyReportModal, type DailyReportData } from "./DailyReportModal";
 
 type Technician = {
   id: string;
@@ -10,7 +12,7 @@ type Technician = {
   specialization: string;
   email: string;
   phone: string;
-  status: 'disponible' | 'ocupado' | 'en-descanso';
+  status: "disponible" | "ocupado" | "en-descanso";
   assignedTasks: number;
   completedTasks: number;
   avgRepairTime: number;
@@ -18,62 +20,69 @@ type Technician = {
 };
 
 export function Technicians() {
+  const [dailyReportOpen, setDailyReportOpen] = useState(false);
+  const [selectedTechnician, setSelectedTechnician] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const [dailyReports, setDailyReports] = useState<DailyReportData[]>([]);
+
   const technicians: Technician[] = [
     {
-      id: 'TECH-001',
-      name: 'Juan Pérez',
-      specialization: 'Mecánico - CNC',
-      email: 'juan.perez@empresa.com',
-      phone: '+52 55 1234 5678',
-      status: 'ocupado',
+      id: "TECH-001",
+      name: "Juan Pérez",
+      specialization: "Mecánico - CNC",
+      email: "juan.perez@empresa.com",
+      phone: "+52 55 1234 5678",
+      status: "ocupado",
       assignedTasks: 3,
       completedTasks: 48,
       avgRepairTime: 4.2,
       efficiency: 95,
     },
     {
-      id: 'TECH-002',
-      name: 'María López',
-      specialization: 'Electricista',
-      email: 'maria.lopez@empresa.com',
-      phone: '+52 55 2345 6789',
-      status: 'disponible',
+      id: "TECH-002",
+      name: "María López",
+      specialization: "Electricista",
+      email: "maria.lopez@empresa.com",
+      phone: "+52 55 2345 6789",
+      status: "disponible",
       assignedTasks: 1,
       completedTasks: 52,
       avgRepairTime: 3.8,
       efficiency: 97,
     },
     {
-      id: 'TECH-003',
-      name: 'Pedro Ramírez',
-      specialization: 'Hidráulica y Neumática',
-      email: 'pedro.ramirez@empresa.com',
-      phone: '+52 55 3456 7890',
-      status: 'ocupado',
+      id: "TECH-003",
+      name: "Pedro Ramírez",
+      specialization: "Hidráulica y Neumática",
+      email: "pedro.ramirez@empresa.com",
+      phone: "+52 55 3456 7890",
+      status: "ocupado",
       assignedTasks: 2,
       completedTasks: 45,
       avgRepairTime: 3.5,
       efficiency: 92,
     },
     {
-      id: 'TECH-004',
-      name: 'Ana Torres',
-      specialization: 'Instrumentación',
-      email: 'ana.torres@empresa.com',
-      phone: '+52 55 4567 8901',
-      status: 'disponible',
+      id: "TECH-004",
+      name: "Ana Torres",
+      specialization: "Instrumentación",
+      email: "ana.torres@empresa.com",
+      phone: "+52 55 4567 8901",
+      status: "disponible",
       assignedTasks: 0,
       completedTasks: 38,
       avgRepairTime: 4.5,
       efficiency: 89,
     },
     {
-      id: 'TECH-005',
-      name: 'Carlos Mendoza',
-      specialization: 'Mecánico General',
-      email: 'carlos.mendoza@empresa.com',
-      phone: '+52 55 5678 9012',
-      status: 'en-descanso',
+      id: "TECH-005",
+      name: "Carlos Mendoza",
+      specialization: "Mecánico General",
+      email: "carlos.mendoza@empresa.com",
+      phone: "+52 55 5678 9012",
+      status: "en-descanso",
       assignedTasks: 0,
       completedTasks: 41,
       avgRepairTime: 4.0,
@@ -83,23 +92,37 @@ export function Technicians() {
 
   const getStatusColor = (status: string) => {
     const colors = {
-      disponible: 'bg-green-100 text-green-800 border-green-200',
-      ocupado: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-      'en-descanso': 'bg-gray-100 text-gray-800 border-gray-200',
+      disponible: "bg-green-100 text-green-800 border-green-200",
+      ocupado: "bg-yellow-100 text-yellow-800 border-yellow-200",
+      "en-descanso": "bg-gray-100 text-gray-800 border-gray-200",
     };
-    return colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-800';
+    return colors[status as keyof typeof colors] || "bg-gray-100 text-gray-800";
   };
 
   const getInitials = (name: string) => {
     return name
-      .split(' ')
+      .split(" ")
       .map((n) => n[0])
-      .join('')
+      .join("")
       .toUpperCase();
   };
 
-  const availableTechs = technicians.filter((t) => t.status === 'disponible').length;
-  const busyTechs = technicians.filter((t) => t.status === 'ocupado').length;
+  const handleOpenDailyReport = (tech: Technician) => {
+    setSelectedTechnician({ id: tech.id, name: tech.name });
+    setDailyReportOpen(true);
+  };
+
+  const handleDailyReportSubmit = (reportData: DailyReportData) => {
+    setDailyReports([...dailyReports, reportData]);
+    alert(
+      `✅ Reporte diario guardado para ${reportData.technicianName}. ID: ${reportData.id}`
+    );
+  };
+
+  const availableTechs = technicians.filter(
+    (t) => t.status === "disponible"
+  ).length;
+  const busyTechs = technicians.filter((t) => t.status === "ocupado").length;
   const avgEfficiency = (
     technicians.reduce((sum, t) => sum + t.efficiency, 0) / technicians.length
   ).toFixed(1);
@@ -124,7 +147,9 @@ export function Technicians() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-600">Disponibles</p>
-                <div className="text-3xl mt-2 text-green-600">{availableTechs}</div>
+                <div className="text-3xl mt-2 text-green-600">
+                  {availableTechs}
+                </div>
               </div>
               <CheckCircle className="h-8 w-8 text-green-600" />
             </div>
@@ -146,7 +171,9 @@ export function Technicians() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-600">Eficiencia Promedio</p>
-                <div className="text-3xl mt-2 text-purple-600">{avgEfficiency}%</div>
+                <div className="text-3xl mt-2 text-purple-600">
+                  {avgEfficiency}%
+                </div>
               </div>
               <Clock className="h-8 w-8 text-purple-600" />
             </div>
@@ -156,7 +183,10 @@ export function Technicians() {
 
       {/* Botón para agregar técnico */}
       <div className="flex justify-end">
-        <Button className="gap-2" onClick={() => alert('Funcionalidad: Agregar nuevo técnico')}>
+        <Button
+          className="gap-2"
+          onClick={() => alert("Funcionalidad: Agregar nuevo técnico")}
+        >
           <Plus className="h-4 w-4" />
           Nuevo Técnico
         </Button>
@@ -177,7 +207,9 @@ export function Technicians() {
                   <CardTitle className="text-lg">{tech.name}</CardTitle>
                   <p className="text-sm text-gray-600">{tech.specialization}</p>
                 </div>
-                <Badge className={getStatusColor(tech.status)}>{tech.status}</Badge>
+                <Badge className={getStatusColor(tech.status)}>
+                  {tech.status}
+                </Badge>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -195,11 +227,17 @@ export function Technicians() {
               <div className="border-t pt-3 space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div className="text-center p-3 bg-blue-50 rounded-lg">
-                    <div className="text-2xl text-blue-600">{tech.assignedTasks}</div>
-                    <p className="text-xs text-gray-600 mt-1">Tareas Asignadas</p>
+                    <div className="text-2xl text-blue-600">
+                      {tech.assignedTasks}
+                    </div>
+                    <p className="text-xs text-gray-600 mt-1">
+                      Tareas Asignadas
+                    </p>
                   </div>
                   <div className="text-center p-3 bg-green-50 rounded-lg">
-                    <div className="text-2xl text-green-600">{tech.completedTasks}</div>
+                    <div className="text-2xl text-green-600">
+                      {tech.completedTasks}
+                    </div>
                     <p className="text-xs text-gray-600 mt-1">Completadas</p>
                   </div>
                 </div>
@@ -224,10 +262,28 @@ export function Technicians() {
               </div>
 
               <div className="flex gap-2 pt-2">
-                <Button variant="outline" size="sm" className="flex-1" onClick={() => alert(`Ver perfil de ${tech.name}`)}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => alert(`Ver perfil de ${tech.name}`)}
+                >
                   Ver perfil
                 </Button>
-                <Button size="sm" className="flex-1" disabled={tech.status !== 'disponible'} onClick={() => alert(`Asignar tarea a ${tech.name}`)}>
+                <Button
+                  size="sm"
+                  className="flex-1 gap-1"
+                  onClick={() => handleOpenDailyReport(tech)}
+                >
+                  <FileText className="h-4 w-4" />
+                  Reporte Diario
+                </Button>
+                <Button
+                  size="sm"
+                  className="flex-1"
+                  disabled={tech.status !== "disponible"}
+                  onClick={() => alert(`Asignar tarea a ${tech.name}`)}
+                >
                   Asignar tarea
                 </Button>
               </div>
@@ -235,6 +291,19 @@ export function Technicians() {
           </Card>
         ))}
       </div>
+
+      {/* Daily Report Modal */}
+      {selectedTechnician && (
+        <DailyReportModal
+          isOpen={dailyReportOpen}
+          onClose={() => {
+            setDailyReportOpen(false);
+            setSelectedTechnician(null);
+          }}
+          onSubmit={handleDailyReportSubmit}
+          technician={selectedTechnician}
+        />
+      )}
     </div>
   );
 }

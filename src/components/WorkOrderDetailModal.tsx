@@ -1,9 +1,9 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import type { WorkOrder } from './WorkOrders';
-import { Calendar, User, MapPin, Wrench, Clock, FileText } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import type { WorkOrder } from "./WorkOrders";
+import { Calendar, User, MapPin, Wrench, Clock, FileText } from "lucide-react";
 
 interface WorkOrderDetailModalProps {
   isOpen: boolean;
@@ -11,35 +11,41 @@ interface WorkOrderDetailModalProps {
   workOrder: WorkOrder;
 }
 
-export function WorkOrderDetailModal({ isOpen, onClose, workOrder }: WorkOrderDetailModalProps) {
+export function WorkOrderDetailModal({
+  isOpen,
+  onClose,
+  workOrder,
+}: WorkOrderDetailModalProps) {
   const getPriorityColor = (priority: string) => {
     const colors = {
-      emergencia: 'bg-red-100 text-red-800 border-red-200',
-      urgente: 'bg-orange-100 text-orange-800 border-orange-200',
-      programado: 'bg-blue-100 text-blue-800 border-blue-200',
-      mejora: 'bg-purple-100 text-purple-800 border-purple-200',
-      inspeccion: 'bg-gray-100 text-gray-800 border-gray-200',
+      emergencia: "bg-red-100 text-red-800 border-red-200",
+      urgente: "bg-orange-100 text-orange-800 border-orange-200",
+      programado: "bg-blue-100 text-blue-800 border-blue-200",
+      mejora: "bg-purple-100 text-purple-800 border-purple-200",
+      inspeccion: "bg-gray-100 text-gray-800 border-gray-200",
     };
-    return colors[priority as keyof typeof colors] || 'bg-gray-100 text-gray-800';
+    return (
+      colors[priority as keyof typeof colors] || "bg-gray-100 text-gray-800"
+    );
   };
 
   const getStatusColor = (status: string) => {
     const colors = {
-      pendiente: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-      programado: 'bg-blue-100 text-blue-800 border-blue-200',
-      ejecutado: 'bg-green-100 text-green-800 border-green-200',
-      reprogramado: 'bg-purple-100 text-purple-800 border-purple-200',
-      'no-ejecutado': 'bg-red-100 text-red-800 border-red-200',
+      pendiente: "bg-yellow-100 text-yellow-800 border-yellow-200",
+      programado: "bg-blue-100 text-blue-800 border-blue-200",
+      ejecutado: "bg-green-100 text-green-800 border-green-200",
+      reprogramado: "bg-purple-100 text-purple-800 border-purple-200",
+      "no-ejecutado": "bg-red-100 text-red-800 border-red-200",
     };
-    return colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-800';
+    return colors[status as keyof typeof colors] || "bg-gray-100 text-gray-800";
   };
 
   const getTypeLabel = (type: string) => {
     const labels = {
-      preventivo: 'Preventivo',
-      correctivo: 'Correctivo',
-      mejora: 'Mejora Técnica',
-      evaluacion: 'Evaluación Técnica',
+      preventivo: "Preventivo",
+      correctivo: "Correctivo",
+      mejora: "Mejora Técnica",
+      evaluacion: "Evaluación Técnica",
     };
     return labels[type as keyof typeof labels] || type;
   };
@@ -116,7 +122,9 @@ export function WorkOrderDetailModal({ isOpen, onClose, workOrder }: WorkOrderDe
           {/* Descripción */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Descripción del Problema</CardTitle>
+              <CardTitle className="text-lg">
+                Descripción del Problema
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-700">{workOrder.description}</p>
@@ -146,11 +154,15 @@ export function WorkOrderDetailModal({ isOpen, onClose, workOrder }: WorkOrderDe
             <Button variant="outline" onClick={onClose}>
               Cerrar
             </Button>
-            {workOrder.status === 'pendiente' && (
-              <Button onClick={() => alert('Funcionalidad: Asignar técnico')}>Asignar Técnico</Button>
+            {workOrder.status === "pendiente" && (
+              <Button onClick={() => alert("Funcionalidad: Asignar técnico")}>
+                Asignar Técnico
+              </Button>
             )}
-            {workOrder.status === 'programado' && (
-              <Button onClick={() => alert('Funcionalidad: Iniciar ejecución')}>Iniciar Ejecución</Button>
+            {workOrder.status === "programado" && (
+              <Button onClick={() => alert("Funcionalidad: Iniciar ejecución")}>
+                Iniciar Ejecución
+              </Button>
             )}
           </div>
         </div>

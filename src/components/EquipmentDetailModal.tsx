@@ -1,8 +1,8 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import {
   Calendar,
   MapPin,
@@ -10,7 +10,7 @@ import {
   TrendingUp,
   ClipboardList,
   Package,
-} from 'lucide-react';
+} from "lucide-react";
 
 type Equipment = {
   id: string;
@@ -36,50 +36,69 @@ interface EquipmentDetailModalProps {
   equipment: Equipment;
 }
 
-export function EquipmentDetailModal({ isOpen, onClose, equipment }: EquipmentDetailModalProps) {
+export function EquipmentDetailModal({
+  isOpen,
+  onClose,
+  equipment,
+}: EquipmentDetailModalProps) {
   const getStatusColor = (status: string) => {
     const colors = {
-      operativo: 'bg-green-100 text-green-800 border-green-200',
-      'en-mantenimiento': 'bg-yellow-100 text-yellow-800 border-yellow-200',
-      'fuera-de-servicio': 'bg-red-100 text-red-800 border-red-200',
-      'en-espera': 'bg-gray-100 text-gray-800 border-gray-200',
+      operativo: "bg-green-100 text-green-800 border-green-200",
+      "en-mantenimiento": "bg-yellow-100 text-yellow-800 border-yellow-200",
+      "fuera-de-servicio": "bg-red-100 text-red-800 border-red-200",
+      "en-espera": "bg-gray-100 text-gray-800 border-gray-200",
     };
-    return colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-800';
+    return colors[status as keyof typeof colors] || "bg-gray-100 text-gray-800";
   };
 
   // Historial de mantenimientos mock
   const maintenanceHistory = [
     {
-      id: 'OT-2024-001',
-      date: '2024-10-15',
-      type: 'Preventivo',
-      duration: '3h',
-      technician: 'Juan Pérez',
-      status: 'Completado',
+      id: "OT-2024-001",
+      date: "2024-10-15",
+      type: "Preventivo",
+      duration: "3h",
+      technician: "Juan Pérez",
+      status: "Completado",
     },
     {
-      id: 'OT-2024-008',
-      date: '2024-09-10',
-      type: 'Correctivo',
-      duration: '5h',
-      technician: 'María López',
-      status: 'Completado',
+      id: "OT-2024-008",
+      date: "2024-09-10",
+      type: "Correctivo",
+      duration: "5h",
+      technician: "María López",
+      status: "Completado",
     },
     {
-      id: 'OT-2024-015',
-      date: '2024-08-05',
-      type: 'Preventivo',
-      duration: '2h',
-      technician: 'Juan Pérez',
-      status: 'Completado',
+      id: "OT-2024-015",
+      date: "2024-08-05",
+      type: "Preventivo",
+      duration: "2h",
+      technician: "Juan Pérez",
+      status: "Completado",
     },
   ];
 
   // Repuestos asociados mock
   const associatedParts = [
-    { code: 'RP-001', name: 'Rodamiento SKF-6205', qty: 2, lastUsed: '2024-10-15' },
-    { code: 'RP-015', name: 'Filtro de aceite', qty: 1, lastUsed: '2024-10-15' },
-    { code: 'RP-023', name: 'Correa de transmisión', qty: 1, lastUsed: '2024-09-10' },
+    {
+      code: "RP-001",
+      name: "Rodamiento SKF-6205",
+      qty: 2,
+      lastUsed: "2024-10-15",
+    },
+    {
+      code: "RP-015",
+      name: "Filtro de aceite",
+      qty: 1,
+      lastUsed: "2024-10-15",
+    },
+    {
+      code: "RP-023",
+      name: "Correa de transmisión",
+      qty: 1,
+      lastUsed: "2024-09-10",
+    },
   ];
 
   return (
@@ -91,7 +110,9 @@ export function EquipmentDetailModal({ isOpen, onClose, equipment }: EquipmentDe
               <DialogTitle className="text-2xl">{equipment.name}</DialogTitle>
               <p className="text-gray-600 mt-1">{equipment.code}</p>
             </div>
-            <Badge className={getStatusColor(equipment.status)}>{equipment.status}</Badge>
+            <Badge className={getStatusColor(equipment.status)}>
+              {equipment.status}
+            </Badge>
           </div>
         </DialogHeader>
 
@@ -123,7 +144,11 @@ export function EquipmentDetailModal({ isOpen, onClose, equipment }: EquipmentDe
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Fecha de Adquisición</p>
-                  <p>{new Date(equipment.acquisitionDate).toLocaleDateString('es-ES')}</p>
+                  <p>
+                    {new Date(equipment.acquisitionDate).toLocaleDateString(
+                      "es-ES"
+                    )}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Área</p>
@@ -144,15 +169,27 @@ export function EquipmentDetailModal({ isOpen, onClose, equipment }: EquipmentDe
                 <div className="flex items-start gap-3">
                   <Calendar className="h-5 w-5 text-gray-500 mt-0.5" />
                   <div>
-                    <p className="text-sm text-gray-600">Último Mantenimiento</p>
-                    <p>{new Date(equipment.lastMaintenance).toLocaleDateString('es-ES')}</p>
+                    <p className="text-sm text-gray-600">
+                      Último Mantenimiento
+                    </p>
+                    <p>
+                      {new Date(equipment.lastMaintenance).toLocaleDateString(
+                        "es-ES"
+                      )}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <Calendar className="h-5 w-5 text-gray-500 mt-0.5" />
                   <div>
-                    <p className="text-sm text-gray-600">Próximo Mantenimiento</p>
-                    <p>{new Date(equipment.nextMaintenance).toLocaleDateString('es-ES')}</p>
+                    <p className="text-sm text-gray-600">
+                      Próximo Mantenimiento
+                    </p>
+                    <p>
+                      {new Date(equipment.nextMaintenance).toLocaleDateString(
+                        "es-ES"
+                      )}
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -167,7 +204,9 @@ export function EquipmentDetailModal({ isOpen, onClose, equipment }: EquipmentDe
                     <TrendingUp className="h-8 w-8 text-blue-600" />
                     <div>
                       <p className="text-sm text-gray-600">Disponibilidad</p>
-                      <div className="text-2xl text-blue-600">{equipment.availability}%</div>
+                      <div className="text-2xl text-blue-600">
+                        {equipment.availability}%
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -178,7 +217,9 @@ export function EquipmentDetailModal({ isOpen, onClose, equipment }: EquipmentDe
                     <Wrench className="h-8 w-8 text-green-600" />
                     <div>
                       <p className="text-sm text-gray-600">MTBF</p>
-                      <div className="text-2xl text-green-600">{equipment.mtbf}h</div>
+                      <div className="text-2xl text-green-600">
+                        {equipment.mtbf}h
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -189,7 +230,9 @@ export function EquipmentDetailModal({ isOpen, onClose, equipment }: EquipmentDe
                     <Wrench className="h-8 w-8 text-orange-600" />
                     <div>
                       <p className="text-sm text-gray-600">MTTR</p>
-                      <div className="text-2xl text-orange-600">{equipment.mttr}h</div>
+                      <div className="text-2xl text-orange-600">
+                        {equipment.mttr}h
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -219,7 +262,10 @@ export function EquipmentDetailModal({ isOpen, onClose, equipment }: EquipmentDe
                     <span>92%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-green-600 h-2 rounded-full" style={{ width: '92%' }}></div>
+                    <div
+                      className="bg-green-600 h-2 rounded-full"
+                      style={{ width: "92%" }}
+                    ></div>
                   </div>
                 </div>
                 <div>
@@ -228,7 +274,10 @@ export function EquipmentDetailModal({ isOpen, onClose, equipment }: EquipmentDe
                     <span>88%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-purple-600 h-2 rounded-full" style={{ width: '88%' }}></div>
+                    <div
+                      className="bg-purple-600 h-2 rounded-full"
+                      style={{ width: "88%" }}
+                    ></div>
                   </div>
                 </div>
               </CardContent>
@@ -252,7 +301,8 @@ export function EquipmentDetailModal({ isOpen, onClose, equipment }: EquipmentDe
                         <div>
                           <p>{item.id}</p>
                           <p className="text-sm text-gray-600">
-                            {new Date(item.date).toLocaleDateString('es-ES')} - {item.type}
+                            {new Date(item.date).toLocaleDateString("es-ES")} -{" "}
+                            {item.type}
                           </p>
                         </div>
                       </div>
@@ -289,7 +339,8 @@ export function EquipmentDetailModal({ isOpen, onClose, equipment }: EquipmentDe
                       <div className="text-right">
                         <p className="text-sm">Cant. usada: {part.qty}</p>
                         <p className="text-sm text-gray-600">
-                          Último uso: {new Date(part.lastUsed).toLocaleDateString('es-ES')}
+                          Último uso:{" "}
+                          {new Date(part.lastUsed).toLocaleDateString("es-ES")}
                         </p>
                       </div>
                     </div>
@@ -304,7 +355,9 @@ export function EquipmentDetailModal({ isOpen, onClose, equipment }: EquipmentDe
           <Button variant="outline" onClick={onClose}>
             Cerrar
           </Button>
-          <Button onClick={() => alert('Funcionalidad: Editar equipo')}>Editar Equipo</Button>
+          <Button onClick={() => alert("Funcionalidad: Editar equipo")}>
+            Editar Equipo
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

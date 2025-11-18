@@ -1,20 +1,28 @@
-import { useState } from 'react';
-import { Button } from './ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Badge } from './ui/badge';
-import { Plus, Search, Filter, Eye, Edit, CheckCircle, LogOut } from 'lucide-react';
-import { Input } from './ui/input';
-import { WorkOrderModal } from './WorkOrderModal';
-import { WorkOrderDetailModal } from './WorkOrderDetailModal';
-import { WorkOrderExitModal } from './WorkOrderExitModal';
-import { WorkOrderClosingModal } from './WorkOrderClosingModal';
+import { useState } from "react";
+import { Button } from "./ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Badge } from "./ui/badge";
+import {
+  Plus,
+  Search,
+  Filter,
+  Eye,
+  Edit,
+  CheckCircle,
+  LogOut,
+} from "lucide-react";
+import { Input } from "./ui/input";
+import { WorkOrderModal } from "./WorkOrderModal";
+import { WorkOrderDetailModal } from "./WorkOrderDetailModal";
+import { WorkOrderExitModal } from "./WorkOrderExitModal";
+import { WorkOrderClosingModal } from "./WorkOrderClosingModal";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
+} from "./ui/select";
 
 export type WorkOrder = {
   id: string;
@@ -27,9 +35,15 @@ export type WorkOrder = {
   area: string;
   equipment: string;
   description: string;
-  type: 'preventivo' | 'correctivo' | 'mejora' | 'evaluacion';
-  priority: 'emergencia' | 'urgente' | 'programado' | 'mejora' | 'inspeccion';
-  status: 'pendiente' | 'programado' | 'ejecutado' | 'cerrado' | 'reprogramado' | 'no-ejecutado';
+  type: "preventivo" | "correctivo" | "mejora" | "evaluacion";
+  priority: "emergencia" | "urgente" | "programado" | "mejora" | "inspeccion";
+  status:
+    | "pendiente"
+    | "programado"
+    | "ejecutado"
+    | "cerrado"
+    | "reprogramado"
+    | "no-ejecutado";
   assignedTo?: string;
   exitData?: any; // Datos de salida / finalización de OT
   closingData?: any; // Datos de cierre de OT
@@ -41,95 +55,99 @@ export function WorkOrders() {
   const [exitModalOpen, setExitModalOpen] = useState(false);
   const [closingModalOpen, setClosingModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<WorkOrder | null>(null);
-  const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [filterPriority, setFilterPriority] = useState<string>('all');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [filterPriority, setFilterPriority] = useState<string>("all");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [workOrders, setWorkOrders] = useState<WorkOrder[]>([
     {
-      id: 'OT-2024-001',
-      requestor: 'Carlos Mendoza',
-      date: '2024-11-10T08:30:00',
-      issueDate: '2024-11-10',
-      issueTime: '08:30',
-      deliveryDate: '2024-11-11',
-      department: 'Producción',
-      area: 'Línea 3',
-      equipment: 'Torno CNC-001',
-      description: 'Ruido anormal en el husillo principal',
-      type: 'correctivo',
-      priority: 'urgente',
-      status: 'programado',
-      assignedTo: 'Juan Pérez',
+      id: "OT-2024-001",
+      requestor: "Carlos Mendoza",
+      date: "2024-11-10T08:30:00",
+      issueDate: "2024-11-10",
+      issueTime: "08:30",
+      deliveryDate: "2024-11-11",
+      department: "Producción",
+      area: "Línea 3",
+      equipment: "Torno CNC-001",
+      description: "Ruido anormal en el husillo principal",
+      type: "correctivo",
+      priority: "urgente",
+      status: "programado",
+      assignedTo: "Juan Pérez",
     },
     {
-      id: 'OT-2024-002',
-      requestor: 'María González',
-      date: '2024-11-11T10:15:00',
-      issueDate: '2024-11-11',
-      issueTime: '10:15',
-      department: 'Mantenimiento',
-      area: 'Compresores',
-      equipment: 'Compresor A-205',
-      description: 'Mantenimiento preventivo mensual',
-      type: 'preventivo',
-      priority: 'programado',
-      status: 'pendiente',
+      id: "OT-2024-002",
+      requestor: "María González",
+      date: "2024-11-11T10:15:00",
+      issueDate: "2024-11-11",
+      issueTime: "10:15",
+      department: "Mantenimiento",
+      area: "Compresores",
+      equipment: "Compresor A-205",
+      description: "Mantenimiento preventivo mensual",
+      type: "preventivo",
+      priority: "programado",
+      status: "pendiente",
     },
     {
-      id: 'OT-2024-003',
-      requestor: 'Roberto Silva',
-      date: '2024-11-09T14:20:00',
-      issueDate: '2024-11-09',
-      issueTime: '14:20',
-      department: 'Producción',
-      area: 'Línea 1',
-      equipment: 'Fresadora F-102',
-      description: 'Falla eléctrica - No enciende',
-      type: 'correctivo',
-      priority: 'emergencia',
-      status: 'ejecutado',
-      assignedTo: 'Pedro Ramírez',
+      id: "OT-2024-003",
+      requestor: "Roberto Silva",
+      date: "2024-11-09T14:20:00",
+      issueDate: "2024-11-09",
+      issueTime: "14:20",
+      department: "Producción",
+      area: "Línea 1",
+      equipment: "Fresadora F-102",
+      description: "Falla eléctrica - No enciende",
+      type: "correctivo",
+      priority: "emergencia",
+      status: "ejecutado",
+      assignedTo: "Pedro Ramírez",
     },
   ]);
 
   const getPriorityColor = (priority: string) => {
     const colors = {
-      emergencia: 'bg-red-100 text-red-800 border-red-200',
-      urgente: 'bg-orange-100 text-orange-800 border-orange-200',
-      programado: 'bg-blue-100 text-blue-800 border-blue-200',
-      mejora: 'bg-purple-100 text-purple-800 border-purple-200',
-      inspeccion: 'bg-gray-100 text-gray-800 border-gray-200',
+      emergencia: "bg-red-100 text-red-800 border-red-200",
+      urgente: "bg-orange-100 text-orange-800 border-orange-200",
+      programado: "bg-blue-100 text-blue-800 border-blue-200",
+      mejora: "bg-purple-100 text-purple-800 border-purple-200",
+      inspeccion: "bg-gray-100 text-gray-800 border-gray-200",
     };
-    return colors[priority as keyof typeof colors] || 'bg-gray-100 text-gray-800';
+    return (
+      colors[priority as keyof typeof colors] || "bg-gray-100 text-gray-800"
+    );
   };
 
   const getStatusColor = (status: string) => {
     const colors = {
-      pendiente: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-      programado: 'bg-blue-100 text-blue-800 border-blue-200',
-      ejecutado: 'bg-green-100 text-green-800 border-green-200',
-      reprogramado: 'bg-purple-100 text-purple-800 border-purple-200',
-      'no-ejecutado': 'bg-red-100 text-red-800 border-red-200',
+      pendiente: "bg-yellow-100 text-yellow-800 border-yellow-200",
+      programado: "bg-blue-100 text-blue-800 border-blue-200",
+      ejecutado: "bg-green-100 text-green-800 border-green-200",
+      reprogramado: "bg-purple-100 text-purple-800 border-purple-200",
+      "no-ejecutado": "bg-red-100 text-red-800 border-red-200",
     };
-    return colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-800';
+    return colors[status as keyof typeof colors] || "bg-gray-100 text-gray-800";
   };
 
   const getTypeLabel = (type: string) => {
     const labels = {
-      preventivo: 'Preventivo',
-      correctivo: 'Correctivo',
-      mejora: 'Mejora Técnica',
-      evaluacion: 'Evaluación Técnica',
+      preventivo: "Preventivo",
+      correctivo: "Correctivo",
+      mejora: "Mejora Técnica",
+      evaluacion: "Evaluación Técnica",
     };
     return labels[type as keyof typeof labels] || type;
   };
 
   const filteredOrders = workOrders.filter((order) => {
-    const matchesStatus = filterStatus === 'all' || order.status === filterStatus;
-    const matchesPriority = filterPriority === 'all' || order.priority === filterPriority;
+    const matchesStatus =
+      filterStatus === "all" || order.status === filterStatus;
+    const matchesPriority =
+      filterPriority === "all" || order.priority === filterPriority;
     const matchesSearch =
-      searchTerm === '' ||
+      searchTerm === "" ||
       order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.equipment.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -227,14 +245,20 @@ export function WorkOrders() {
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
                 <div>
-                    <CardTitle className="text-lg">{order.id}</CardTitle>
-                    <p className="text-sm text-gray-600 mt-1">{order.equipment}</p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Emitida: {order.issueDate ? order.issueDate : new Date(order.date).toLocaleDateString()} {order.issueTime ? order.issueTime : ''}
-                      {order.deliveryDate && (
-                        <span> • Entrega: {order.deliveryDate}</span>
-                      )}
-                    </p>
+                  <CardTitle className="text-lg">{order.id}</CardTitle>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {order.equipment}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Emitida:{" "}
+                    {order.issueDate
+                      ? order.issueDate
+                      : new Date(order.date).toLocaleDateString()}{" "}
+                    {order.issueTime ? order.issueTime : ""}
+                    {order.deliveryDate && (
+                      <span> • Entrega: {order.deliveryDate}</span>
+                    )}
+                  </p>
                 </div>
                 <Badge className={getPriorityColor(order.priority)}>
                   {order.priority}
@@ -284,18 +308,19 @@ export function WorkOrders() {
                     <Eye className="h-4 w-4" />
                     Ver detalles
                   </Button>
-                  {order.status !== 'ejecutado' && order.status !== 'cerrado' && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleOpenExitModal(order)}
-                      className="gap-2 text-green-600 hover:text-green-700 border-green-600 hover:bg-green-50"
-                    >
-                      <LogOut className="h-4 w-4" />
-                      Finalizar
-                    </Button>
-                  )}
-                  {order.status === 'ejecutado' && (
+                  {order.status !== "ejecutado" &&
+                    order.status !== "cerrado" && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleOpenExitModal(order)}
+                        className="gap-2 text-green-600 hover:text-green-700 border-green-600 hover:bg-green-50"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Finalizar
+                      </Button>
+                    )}
+                  {order.status === "ejecutado" && (
                     <Button
                       variant="outline"
                       size="sm"

@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { AlertCircle, CheckCircle, Clock, TrendingUp, Package } from 'lucide-react';
+import MachinePerformanceSection from './MachinePerformanceSection';
 
 export function Dashboard() {
   // Datos mock para las gráficas
@@ -190,6 +191,11 @@ export function Dashboard() {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Sección: Desempeño de Máquina */}
+      <div className="mt-6">
+        <MachinePerformanceSection />
       </div>
     </div>
   );
