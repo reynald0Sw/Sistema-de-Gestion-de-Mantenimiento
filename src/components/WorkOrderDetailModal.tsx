@@ -149,6 +149,34 @@ export function WorkOrderDetailModal({
             </Card>
           )}
 
+          {/* Historial de estados */}
+          {((workOrder as any).statusHistory || []).length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Historial de estados</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {((workOrder as any).statusHistory || []).map(
+                    (h: any, i: number) => (
+                      <div key={i} className="flex items-start gap-3">
+                        <div className="flex-1">
+                          <div className="text-sm text-gray-600">
+                            {h.status}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            {h.by} • {new Date(h.at).toLocaleString()}{" "}
+                            {h.note ? `• ${h.note}` : ""}
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Botones de acción */}
           <div className="flex gap-2 justify-end pt-4 border-t">
             <Button variant="outline" onClick={onClose}>

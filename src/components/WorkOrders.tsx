@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
@@ -16,6 +16,12 @@ import {
   Package,
 } from "lucide-react";
 import { Input } from "./ui/input";
+import {
+  getWorkOrders as storeGetWorkOrders,
+  setWorkOrders as storeSetWorkOrders,
+  updateOrder as storeUpdateOrder,
+  subscribe as storeSubscribe,
+} from "../lib/workOrdersStore";
 import { WorkOrderModal } from "./WorkOrderModal";
 import { WorkOrderDetailModal } from "./WorkOrderDetailModal";
 import { WorkOrderExitModal } from "./WorkOrderExitModal";
@@ -66,7 +72,7 @@ export function WorkOrders() {
   const [filterPriority, setFilterPriority] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const [workOrders, setWorkOrders] = useState<WorkOrder[]>([
+  const INITIAL_ORDERS: WorkOrder[] = [
     {
       id: "OT-2024-001",
       projectCode: "PROJ-A1",
@@ -194,7 +200,27 @@ export function WorkOrders() {
       status: "programado",
       assignedTo: "Alberto Ruiz",
     },
-  ]);
+  ];
+
+  const [workOrders, setWorkOrders] = useState<WorkOrder[]>(() => {
+    try {
+      const stored = storeGetWorkOrders();
+      if (stored && stored.length) return stored as WorkOrder[];
+      storeSetWorkOrders(INITIAL_ORDERS as any);
+      return INITIAL_ORDERS;
+    } catch {
+      return INITIAL_ORDERS;
+    }
+  });
+
+  useEffect(() => {
+    const unsub = storeSubscribe((orders: any) => {
+      setWorkOrders(
+        (orders && orders.length ? orders : INITIAL_ORDERS) as WorkOrder[]
+      );
+    });
+    return unsub;
+  }, []);
 
   const getPriorityColor = (priority: string) => {
     const colors = {

@@ -2,6 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Calendar, Clock, User, Wrench } from "lucide-react";
+import { useEffect, useState } from "react";
+import { AssignTechnicianModal } from "./AssignTechnicianModal";
+import { RejectOrderModal } from "./RejectOrderModal";
+import {
+  updateOrder as storeUpdateOrder,
+  getWorkOrders,
+} from "../lib/workOrdersStore";
 
 type MaintenanceTask = {
   id: string;
@@ -10,13 +17,18 @@ type MaintenanceTask = {
   type: string;
   scheduledDate: string;
   estimatedDuration: string;
-  assignedTo: string;
-  status: "programado" | "en-proceso" | "completado" | "reprogramado";
+  assignedTo?: string;
+  status:
+    | "programado"
+    | "en-proceso"
+    | "completado"
+    | "reprogramado"
+    | "rechazado";
   priority: string;
 };
 
 export function MaintenanceSchedule() {
-  const tasks: MaintenanceTask[] = [
+  const initial: MaintenanceTask[] = [
     {
       id: "PROG-001",
       otId: "OT-2024-001",
@@ -52,12 +64,43 @@ export function MaintenanceSchedule() {
     },
   ];
 
+  const [tasks, setTasks] = useState<MaintenanceTask[]>(() => {
+    try {
+      const stored = getWorkOrders();
+      if (stored && stored.length) {
+        // map some stored orders into schedule tasks when possible
+        return stored.map(
+          (o: any, idx: number) =>
+            ({
+              id: `PROG-${idx + 1}`,
+              otId: o.id,
+              equipment: o.equipment || o.id,
+              type: o.type || "Preventivo",
+              scheduledDate: o.date || new Date().toISOString(),
+              estimatedDuration: "2 horas",
+              assignedTo: o.assignedTo || undefined,
+              status: (o.status as MaintenanceTask["status"]) || "programado",
+              priority: o.priority || "programado",
+            } as MaintenanceTask)
+        );
+      }
+    } catch {}
+    return initial;
+  });
+
+  const [selectedTask, setSelectedTask] = useState<MaintenanceTask | null>(
+    null
+  );
+  const [assignOpen, setAssignOpen] = useState(false);
+  const [rejectOpen, setRejectOpen] = useState(false);
+
   const getStatusColor = (status: string) => {
     const colors = {
       programado: "bg-blue-100 text-blue-800 border-blue-200",
       "en-proceso": "bg-yellow-100 text-yellow-800 border-yellow-200",
       completado: "bg-green-100 text-green-800 border-green-200",
       reprogramado: "bg-purple-100 text-purple-800 border-purple-200",
+      rechazado: "bg-red-100 text-red-800 border-red-200",
     };
     return colors[status as keyof typeof colors] || "bg-gray-100 text-gray-800";
   };
@@ -87,6 +130,66 @@ export function MaintenanceSchedule() {
     acc[date].push(task);
     return acc;
   }, {} as Record<string, MaintenanceTask[]>);
+
+  useEffect(() => {
+    // Keep tasks mapped to store when possible (best-effort sync)
+    // No-op here, but could be used to refresh from store
+  }, []);
+
+  const handleOpenAssign = (task: MaintenanceTask) => {
+    setSelectedTask(task);
+    setAssignOpen(true);
+  };
+
+  const handleAssign = (technician: string) => {
+    if (!selectedTask) return;
+    const updated = tasks.map((t) =>
+      t.id === selectedTask.id
+        ? { ...t, assignedTo: technician, status: "en-proceso" }
+        : t
+    );
+    setTasks(updated as MaintenanceTask[]);
+    // try to update shared store (best-effort)
+    try {
+      if (selectedTask.otId) {
+        storeUpdateOrder(
+          selectedTask.otId,
+          { assignedTo: technician, status: "en-proceso" },
+          technician,
+          "Asignado desde Planificación"
+        );
+      }
+    } catch (e) {
+      console.warn("store update failed", e);
+    }
+    setSelectedTask(null);
+  };
+
+  const handleOpenReject = (task: MaintenanceTask) => {
+    setSelectedTask(task);
+    setRejectOpen(true);
+  };
+
+  const handleReject = (reason: string) => {
+    if (!selectedTask) return;
+    const updated = tasks.map((t) =>
+      t.id === selectedTask.id ? { ...t, status: "rechazado" } : t
+    );
+    setTasks(updated as MaintenanceTask[]);
+    try {
+      if (selectedTask.otId) {
+        storeUpdateOrder(
+          selectedTask.otId,
+          { status: "rechazado" },
+          "planner",
+          reason || "Rechazado desde Planificación"
+        );
+      }
+    } catch (e) {
+      console.warn("store update failed", e);
+    }
+    setSelectedTask(null);
+  };
 
   return (
     <div className="space-y-6">
@@ -190,13 +293,29 @@ export function MaintenanceSchedule() {
                       <Badge className={getStatusColor(task.status)}>
                         {task.status}
                       </Badge>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => alert(`Detalles de: ${task.id}`)}
-                      >
-                        Ver detalles
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => alert(`Detalles de: ${task.id}`)}
+                        >
+                          Ver detalles
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleOpenAssign(task)}
+                        >
+                          Tomar
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleOpenReject(task)}
+                        >
+                          Rechazar
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -205,6 +324,24 @@ export function MaintenanceSchedule() {
           </div>
         ))}
       </div>
+
+      <AssignTechnicianModal
+        isOpen={assignOpen}
+        onClose={() => {
+          setAssignOpen(false);
+          setSelectedTask(null);
+        }}
+        onAssign={handleAssign}
+      />
+
+      <RejectOrderModal
+        isOpen={rejectOpen}
+        onClose={() => {
+          setRejectOpen(false);
+          setSelectedTask(null);
+        }}
+        onReject={handleReject}
+      />
     </div>
   );
 }
