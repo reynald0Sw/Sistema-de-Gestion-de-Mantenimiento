@@ -1,17 +1,23 @@
-import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './ui/dialog';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Textarea } from './ui/textarea';
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "./ui/dialog";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
-import type { WorkOrder } from './WorkOrders';
+} from "./ui/select";
+import type { WorkOrder } from "./WorkOrders";
 
 interface WorkOrderModalProps {
   isOpen: boolean;
@@ -19,40 +25,47 @@ interface WorkOrderModalProps {
   onSubmit: (order: WorkOrder) => void;
 }
 
-export function WorkOrderModal({ isOpen, onClose, onSubmit }: WorkOrderModalProps) {
+export function WorkOrderModal({
+  isOpen,
+  onClose,
+  onSubmit,
+}: WorkOrderModalProps) {
   const [formData, setFormData] = useState({
-    requestor: '',
-    department: '',
-    area: '',
-    equipment: '',
-    description: '',
-    issueDate: '',
-    issueTime: '',
-    deliveryDate: '',
-    type: 'correctivo' as const,
-    priority: 'programado' as const,
+    requestor: "",
+    department: "",
+    area: "",
+    equipment: "",
+    description: "",
+    issueDate: "",
+    issueTime: "",
+    deliveryDate: "",
+    type: "correctivo" as const,
+    priority: "programado" as const,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const newOrder: WorkOrder = {
-      id: `OT-2024-${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}`,
+      id: `OT-2024-${String(Math.floor(Math.random() * 1000)).padStart(
+        3,
+        "0"
+      )}`,
       ...formData,
       date: new Date().toISOString(),
-      status: 'pendiente',
+      status: "pendiente",
     };
     onSubmit(newOrder);
     setFormData({
-      requestor: '',
-      department: '',
-      area: '',
-      equipment: '',
-      description: '',
-      issueDate: '',
-      issueTime: '',
-      deliveryDate: '',
-      type: 'correctivo',
-      priority: 'programado',
+      requestor: "",
+      department: "",
+      area: "",
+      equipment: "",
+      description: "",
+      issueDate: "",
+      issueTime: "",
+      deliveryDate: "",
+      type: "correctivo",
+      priority: "programado",
     });
     onClose();
   };
@@ -65,14 +78,16 @@ export function WorkOrderModal({ isOpen, onClose, onSubmit }: WorkOrderModalProp
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-             <div className="space-y-2">
+            <div className="space-y-2">
               <Label htmlFor="issueDate">Fecha de emisión *</Label>
               <Input
                 id="issueDate"
                 type="date"
                 required
                 value={formData.issueDate}
-                onChange={(e) => setFormData({ ...formData, issueDate: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, issueDate: e.target.value })
+                }
               />
             </div>
             <div className="space-y-2">
@@ -82,7 +97,9 @@ export function WorkOrderModal({ isOpen, onClose, onSubmit }: WorkOrderModalProp
                 type="time"
                 required
                 value={formData.issueTime}
-                onChange={(e) => setFormData({ ...formData, issueTime: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, issueTime: e.target.value })
+                }
               />
             </div>
             <div className="space-y-2">
@@ -91,7 +108,9 @@ export function WorkOrderModal({ isOpen, onClose, onSubmit }: WorkOrderModalProp
                 id="requestor"
                 required
                 value={formData.requestor}
-                onChange={(e) => setFormData({ ...formData, requestor: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, requestor: e.target.value })
+                }
               />
             </div>
             <div className="space-y-2">
@@ -100,17 +119,21 @@ export function WorkOrderModal({ isOpen, onClose, onSubmit }: WorkOrderModalProp
                 id="department"
                 required
                 value={formData.department}
-                onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, department: e.target.value })
+                }
               />
             </div>
-           
+
             <div className="space-y-2">
               <Label htmlFor="area">Área / Línea Afectada*</Label>
               <Input
                 id="area"
                 required
                 value={formData.area}
-                onChange={(e) => setFormData({ ...formData, area: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, area: e.target.value })
+                }
               />
             </div>
             <div className="space-y-2">
@@ -119,11 +142,13 @@ export function WorkOrderModal({ isOpen, onClose, onSubmit }: WorkOrderModalProp
                 id="equipment"
                 required
                 value={formData.equipment}
-                onChange={(e) => setFormData({ ...formData, equipment: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, equipment: e.target.value })
+                }
               />
             </div>
 
-             {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="deliveryDate">Fecha de solución/entrega</Label>
               <Input
@@ -134,11 +159,13 @@ export function WorkOrderModal({ isOpen, onClose, onSubmit }: WorkOrderModalProp
               />
             </div>
           </div> */}
-           <div className="space-y-2">
+            <div className="space-y-2">
               <Label htmlFor="priority">Tipo de Solicitud *</Label>
               <Select
                 value={formData.priority}
-                onValueChange={(value: any) => setFormData({ ...formData, priority: value })}
+                onValueChange={(value: any) =>
+                  setFormData({ ...formData, priority: value })
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -152,34 +179,20 @@ export function WorkOrderModal({ isOpen, onClose, onSubmit }: WorkOrderModalProp
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="type">Tipo de Trabajo (A completar por mantenimiento) *</Label>
-              <Select
-                value={formData.type}
-                onValueChange={(value: any) => setFormData({ ...formData, type: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="preventivo">Mantenimiento Preventivo</SelectItem>
-                  <SelectItem value="correctivo">Mantenimiento Correctivo</SelectItem>
-                  <SelectItem value="mejora">Mejora Técnica</SelectItem>
-                  <SelectItem value="evaluacion">Evaluación Técnica</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-           
           </div>
-         
+
           <div className="space-y-2">
-            <Label htmlFor="description">Descripción / Detalle de la Falla *</Label>
+            <Label htmlFor="description">
+              Descripción / Detalle de la Falla *
+            </Label>
             <Textarea
               id="description"
               required
               rows={4}
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
               placeholder="Descripción clara y precisa del problema detectado, anomalía o necesidad técnica. 
 "
             />

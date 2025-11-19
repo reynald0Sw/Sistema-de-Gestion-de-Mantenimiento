@@ -518,10 +518,7 @@ export function WorkOrders() {
                   <p className="text-gray-600">Área:</p>
                   <p>{order.area}</p>
                 </div>
-                <div>
-                  <p className="text-gray-600">Tipo:</p>
-                  <p>{getTypeLabel(order.type)}</p>
-                </div>
+
                 <div>
                   <p className="text-gray-600">Fecha:</p>
                   <p>{new Date(order.date).toLocaleDateString()}</p>

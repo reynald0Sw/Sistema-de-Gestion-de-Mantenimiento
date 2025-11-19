@@ -12,7 +12,7 @@ type Technician = {
   specialization: string;
   email: string;
   phone: string;
-  status: "disponible" | "ocupado" | "en-descanso";
+  status: "disponible" | "ocupado";
   assignedTasks: number;
   completedTasks: number;
   avgRepairTime: number;
@@ -82,7 +82,7 @@ export function Technicians() {
       specialization: "Mecánico General",
       email: "carlos.mendoza@empresa.com",
       phone: "+52 55 5678 9012",
-      status: "en-descanso",
+      status: "disponible",
       assignedTasks: 0,
       completedTasks: 41,
       avgRepairTime: 4.0,
@@ -94,7 +94,6 @@ export function Technicians() {
     const colors = {
       disponible: "bg-green-100 text-green-800 border-green-200",
       ocupado: "bg-yellow-100 text-yellow-800 border-yellow-200",
-      "en-descanso": "bg-gray-100 text-gray-800 border-gray-200",
     };
     return colors[status as keyof typeof colors] || "bg-gray-100 text-gray-800";
   };
@@ -278,14 +277,14 @@ export function Technicians() {
                   <FileText className="h-4 w-4" />
                   Reporte Diario
                 </Button>
-                <Button
+                {/* <Button
                   size="sm"
                   className="flex-1"
                   disabled={tech.status !== "disponible"}
                   onClick={() => alert(`Asignar tarea a ${tech.name}`)}
                 >
                   Asignar tarea
-                </Button>
+                </Button> */}
               </div>
             </CardContent>
           </Card>

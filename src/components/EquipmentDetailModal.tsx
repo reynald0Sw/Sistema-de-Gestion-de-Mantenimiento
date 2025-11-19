@@ -119,7 +119,7 @@ export function EquipmentDetailModal({
         <Tabs defaultValue="general" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="general">General</TabsTrigger>
-            <TabsTrigger value="kpis">KPIs</TabsTrigger>
+            {/* <TabsTrigger value="kpis">KPIs</TabsTrigger> */}
             <TabsTrigger value="history">Historial</TabsTrigger>
             <TabsTrigger value="parts">Repuestos</TabsTrigger>
           </TabsList>
@@ -196,7 +196,7 @@ export function EquipmentDetailModal({
             </Card>
           </TabsContent>
 
-          <TabsContent value="kpis" className="space-y-4">
+          {/* <TabsContent value="kpis" className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Card>
                 <CardContent className="p-6">
@@ -282,7 +282,7 @@ export function EquipmentDetailModal({
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+          </TabsContent> */}
 
           <TabsContent value="history" className="space-y-4">
             <Card>

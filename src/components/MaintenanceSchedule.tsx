@@ -618,18 +618,6 @@ export function MaintenanceSchedule() {
         </div>
 
         <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-600">Ordenar por</label>
-          <select
-            value={sortByPriority ? "priority" : "none"}
-            onChange={(e) => setSortByPriority(e.target.value === "priority")}
-            className="text-sm border rounded px-2 py-1"
-          >
-            <option value="none">Sin ordenar</option>
-            <option value="priority">Prioridad (alto primero)</option>
-          </select>
-        </div>
-
-        <div className="flex items-center gap-2">
           <label className="text-sm text-gray-600">Asignación</label>
           <select
             value={assignedFilter}
@@ -750,7 +738,7 @@ export function MaintenanceSchedule() {
                         >
                           Priorizar
                         </Button> */}
-                        {(task.status === "en-proceso" || task.assignedTo) && (
+                        {/* {(task.status === "en-proceso" || task.assignedTo) && (
                           <Button
                             variant="outline"
                             size="sm"
@@ -758,8 +746,8 @@ export function MaintenanceSchedule() {
                           >
                             Finalizar
                           </Button>
-                        )}
-                        {task.status === "ejecutado" && (
+                        )} */}
+                        {/* {task.status === "ejecutado" && (
                           <Button
                             variant="secondary"
                             size="sm"
@@ -767,7 +755,7 @@ export function MaintenanceSchedule() {
                           >
                             Cerrar
                           </Button>
-                        )}
+                        )} */}
                       </div>
                     </div>
                   </CardContent>

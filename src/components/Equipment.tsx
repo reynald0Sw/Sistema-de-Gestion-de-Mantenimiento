@@ -265,7 +265,7 @@ export function Equipment() {
                       </div>
                     </div>
 
-                    <div className="border-t pt-3 space-y-2">
+                    {/* <div className="border-t pt-3 space-y-2">
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-600">Disponibilidad</span>
                         <span className={getAvailabilityColor(eq.availability)}>
@@ -280,7 +280,7 @@ export function Equipment() {
                         <span className="text-gray-600">MTTR</span>
                         <span>{eq.mttr}h</span>
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="border-t pt-3">
                       <p className="text-sm text-gray-600">
