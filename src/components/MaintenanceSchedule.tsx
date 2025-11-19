@@ -136,6 +136,29 @@ export function MaintenanceSchedule() {
     // No-op here, but could be used to refresh from store
   }, []);
 
+  // derive status counts from shared store when available, otherwise from local tasks
+  const storeOrders = getWorkOrders() || [];
+  const sourceOrders: any[] =
+    storeOrders && storeOrders.length
+      ? storeOrders
+      : tasks.map((t) => ({ id: t.otId, status: t.status }));
+
+  const countProgramados = sourceOrders.filter(
+    (o) => o.status === "programado"
+  ).length;
+  const countEnProceso = sourceOrders.filter(
+    (o) => o.status === "en-proceso"
+  ).length;
+  const countCompletados = sourceOrders.filter(
+    (o) => o.status === "ejecutado" || o.status === "completado"
+  ).length;
+  const countReprogramados = sourceOrders.filter(
+    (o) => o.status === "reprogramado"
+  ).length;
+  const countRechazados = sourceOrders.filter(
+    (o) => o.status === "rechazado"
+  ).length;
+
   const handleOpenAssign = (task: MaintenanceTask) => {
     setSelectedTask(task);
     setAssignOpen(true);
@@ -194,11 +217,11 @@ export function MaintenanceSchedule() {
   return (
     <div className="space-y-6">
       {/* Resumen */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="flex gap-4 overflow-x-auto pb-2">
         <Card>
           <CardContent className="p-6">
             <div className="text-center">
-              <div className="text-3xl text-blue-600">8</div>
+              <div className="text-3xl text-blue-600">{countProgramados}</div>
               <p className="text-gray-600 mt-1">Programados</p>
             </div>
           </CardContent>
@@ -206,7 +229,7 @@ export function MaintenanceSchedule() {
         <Card>
           <CardContent className="p-6">
             <div className="text-center">
-              <div className="text-3xl text-yellow-600">3</div>
+              <div className="text-3xl text-yellow-600">{countEnProceso}</div>
               <p className="text-gray-600 mt-1">En Proceso</p>
             </div>
           </CardContent>
@@ -214,7 +237,7 @@ export function MaintenanceSchedule() {
         <Card>
           <CardContent className="p-6">
             <div className="text-center">
-              <div className="text-3xl text-green-600">25</div>
+              <div className="text-3xl text-green-600">{countCompletados}</div>
               <p className="text-gray-600 mt-1">Completados</p>
             </div>
           </CardContent>
@@ -222,8 +245,18 @@ export function MaintenanceSchedule() {
         <Card>
           <CardContent className="p-6">
             <div className="text-center">
-              <div className="text-3xl text-purple-600">2</div>
+              <div className="text-3xl text-purple-600">
+                {countReprogramados}
+              </div>
               <p className="text-gray-600 mt-1">Reprogramados</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-6">
+            <div className="text-center">
+              <div className="text-3xl text-gray-600">{countRechazados}</div>
+              <p className="text-gray-600 mt-1">Rechazados</p>
             </div>
           </CardContent>
         </Card>

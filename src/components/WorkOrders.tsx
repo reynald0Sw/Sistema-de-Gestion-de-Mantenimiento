@@ -257,19 +257,20 @@ export function WorkOrders() {
   };
 
   // Conteos para KPIs (estilo Dashboard)
-  const countProgramados = workOrders.filter(
-    (o) => o.status === "programado"
+  // Conteos para KPIs por prioridad (Emergencia, Urgente, Programado, Mejora, Inspección)
+  const countEmergencia = workOrders.filter(
+    (o) => o.priority === "emergencia"
   ).length;
-  const countEnProceso =
-    workOrders.filter((o) => o.status === "en-proceso").length || 0;
-  const countCompletados = workOrders.filter(
-    (o) => o.status === "ejecutado"
+  const countUrgente = workOrders.filter(
+    (o) => o.priority === "urgente"
   ).length;
-  const countReprogramados = workOrders.filter(
-    (o) => o.status === "reprogramado"
+  const countProgramadoPriority = workOrders.filter(
+    (o) => o.priority === "programado"
   ).length;
-  const countRechazados =
-    workOrders.filter((o) => o.status === "rechazado").length || 0;
+  const countMejora = workOrders.filter((o) => o.priority === "mejora").length;
+  const countInspeccion = workOrders.filter(
+    (o) => o.priority === "inspeccion"
+  ).length;
 
   const getStatusLabel = (s: string) => {
     const map: Record<string, string> = {
@@ -345,9 +346,41 @@ export function WorkOrders() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600">Programados</p>
+                <p className="text-gray-600">Emergencia</p>
                 <div className="flex items-baseline gap-2 mt-2">
-                  <span className="text-3xl">{countProgramados}</span>
+                  <span className="text-3xl">{countEmergencia}</span>
+                </div>
+              </div>
+              <div className="p-3 rounded-lg bg-red-100">
+                <AlertCircle className="h-6 w-6 text-red-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="min-w-[200px] flex-shrink-0">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600">Urgente</p>
+                <div className="flex items-baseline gap-2 mt-2">
+                  <span className="text-3xl">{countUrgente}</span>
+                </div>
+              </div>
+              <div className="p-3 rounded-lg bg-orange-100">
+                <Clock className="h-6 w-6 text-orange-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="min-w-[200px] flex-shrink-0">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600">Programado</p>
+                <div className="flex items-baseline gap-2 mt-2">
+                  <span className="text-3xl">{countProgramadoPriority}</span>
                 </div>
               </div>
               <div className="p-3 rounded-lg bg-blue-100">
@@ -361,41 +394,9 @@ export function WorkOrders() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600">En Proceso</p>
+                <p className="text-gray-600">Mejora</p>
                 <div className="flex items-baseline gap-2 mt-2">
-                  <span className="text-3xl">{countEnProceso}</span>
-                </div>
-              </div>
-              <div className="p-3 rounded-lg bg-yellow-100">
-                <Clock className="h-6 w-6 text-yellow-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="min-w-[200px] flex-shrink-0">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600">Completados</p>
-                <div className="flex items-baseline gap-2 mt-2">
-                  <span className="text-3xl">{countCompletados}</span>
-                </div>
-              </div>
-              <div className="p-3 rounded-lg bg-green-100">
-                <CheckCircle className="h-6 w-6 text-green-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="min-w-[200px] flex-shrink-0">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600">Reprogramados</p>
-                <div className="flex items-baseline gap-2 mt-2">
-                  <span className="text-3xl">{countReprogramados}</span>
+                  <span className="text-3xl">{countMejora}</span>
                 </div>
               </div>
               <div className="p-3 rounded-lg bg-purple-100">
@@ -409,9 +410,9 @@ export function WorkOrders() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600">Rechazados</p>
+                <p className="text-gray-600">Inspección</p>
                 <div className="flex items-baseline gap-2 mt-2">
-                  <span className="text-3xl">{countRechazados}</span>
+                  <span className="text-3xl">{countInspeccion}</span>
                 </div>
               </div>
               <div className="p-3 rounded-lg bg-gray-100">
