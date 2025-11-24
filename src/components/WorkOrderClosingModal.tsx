@@ -168,9 +168,7 @@ export function WorkOrderClosingModal({
               <TabsTrigger value="general" className="text-xs py-1">
                 General
               </TabsTrigger>
-              <TabsTrigger value="seguridad" className="text-xs py-1">
-                Seguridad
-              </TabsTrigger>
+
               <TabsTrigger value="descripcion" className="text-xs py-1">
                 Descripción
               </TabsTrigger>
@@ -178,35 +176,12 @@ export function WorkOrderClosingModal({
                 Cierre
               </TabsTrigger>
             </TabsList>
-
             {/* TAB 1: GENERAL */}
             <TabsContent
               value="general"
               className="flex-1 overflow-y-auto space-y-2 px-4 sm:px-6 py-3"
             >
               <div className="grid grid-cols-3 gap-1">
-                <div>
-                  <Label className="text-xs">Año *</Label>
-                  <Input
-                    required
-                    value={formData.year}
-                    onChange={(e) =>
-                      setFormData({ ...formData, year: e.target.value })
-                    }
-                    className="text-xs h-7"
-                  />
-                </div>
-                <div>
-                  <Label className="text-xs">N° de OT *</Label>
-                  <Input
-                    required
-                    value={formData.otNumber || workOrder?.id || ""}
-                    onChange={(e) =>
-                      setFormData({ ...formData, otNumber: e.target.value })
-                    }
-                    className="text-xs h-7"
-                  />
-                </div>
                 <div>
                   <Label className="text-xs">Hora de Emisión</Label>
                   <Input
@@ -218,18 +193,6 @@ export function WorkOrderClosingModal({
               </div>
 
               <div className="grid grid-cols-2 gap-1">
-                <div>
-                  <Label className="text-xs">Hora de Inicio *</Label>
-                  <Input
-                    type="time"
-                    required
-                    value={formData.startHour}
-                    onChange={(e) =>
-                      setFormData({ ...formData, startHour: e.target.value })
-                    }
-                    className="text-xs h-7"
-                  />
-                </div>
                 <div>
                   <Label className="text-xs">Hora de Cierre *</Label>
                   <Input
@@ -249,7 +212,7 @@ export function WorkOrderClosingModal({
                   Identificación del Equipo
                 </h4>
                 <div className="grid grid-cols-2 gap-1">
-                  <div>
+                  {/* <div>
                     <Label className="text-xs">Equipo *</Label>
                     <Input
                       required
@@ -272,7 +235,7 @@ export function WorkOrderClosingModal({
                       }
                       className="text-xs h-7"
                     />
-                  </div>
+                  </div> */}
                 </div>
                 <div>
                   <Label className="text-xs">Ubicación / Línea</Label>
@@ -285,7 +248,7 @@ export function WorkOrderClosingModal({
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-1">
-                  <div>
+                  {/* <div>
                     <Label className="text-xs">Asignado a (Técnico)</Label>
                     <Input
                       value={formData.assignedTechnician}
@@ -297,7 +260,7 @@ export function WorkOrderClosingModal({
                       }
                       className="text-xs h-7"
                     />
-                  </div>
+                  </div> */}
                   <div>
                     <Label className="text-xs">Aprobado Por</Label>
                     <Input
@@ -324,168 +287,7 @@ export function WorkOrderClosingModal({
                   />
                 </div>
               </div>
-
-              <div className="bg-purple-50 p-2 rounded border border-purple-200 space-y-1">
-                <h4 className="font-semibold text-xs">Tipo de Mantenimiento</h4>
-                <div className="grid grid-cols-2 gap-1">
-                  {[
-                    { value: "preventivo", label: "Preventivo" },
-                    { value: "correctivo", label: "Correctivo" },
-                    { value: "predictivo", label: "Predictivo" },
-                    { value: "mejora", label: "Mejora" },
-                  ].map((type) => (
-                    <label
-                      key={type.value}
-                      className="flex items-center gap-1 cursor-pointer text-xs"
-                    >
-                      <input
-                        type="radio"
-                        name="maintenanceType"
-                        value={type.value}
-                        checked={formData.maintenanceType === type.value}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            maintenanceType: e.target.value as any,
-                          })
-                        }
-                        className="w-3 h-3"
-                      />
-                      {type.label}
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <div className="bg-red-50 p-2 rounded border border-red-200 space-y-1">
-                <h4 className="font-semibold text-xs">Prioridad</h4>
-                <div className="grid grid-cols-2 gap-1">
-                  {[
-                    { value: "urgente", label: "Urgente" },
-                    { value: "alta", label: "Alta" },
-                    { value: "media", label: "Media" },
-                    { value: "baja", label: "Baja" },
-                  ].map((prio) => (
-                    <label
-                      key={prio.value}
-                      className="flex items-center gap-1 cursor-pointer text-xs"
-                    >
-                      <input
-                        type="radio"
-                        name="priority"
-                        value={prio.value}
-                        checked={formData.priority === prio.value}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            priority: e.target.value as any,
-                          })
-                        }
-                        className="w-3 h-3"
-                      />
-                      {prio.label}
-                    </label>
-                  ))}
-                </div>
-              </div>
             </TabsContent>
-
-            {/* TAB 2: SEGURIDAD */}
-            <TabsContent
-              value="seguridad"
-              className="flex-1 overflow-y-auto space-y-2 px-4 sm:px-6 py-3"
-            >
-              <div className="bg-orange-50 p-2 rounded border border-orange-200 space-y-1">
-                <h4 className="font-semibold text-xs">
-                  Requisitos para la Ejecución - Seguridad
-                </h4>
-                <div className="space-y-1">
-                  <div>
-                    <p className="font-semibold text-xs mb-1">
-                      Requisito de Seguridad:
-                    </p>
-                    <div className="grid grid-cols-2 gap-1">
-                      {[
-                        {
-                          key: "loto",
-                          label:
-                            "Aplicar Procedimiento LOTO (Bloqueo y Etiquetado)",
-                        },
-                        { key: "safetyGloves", label: "Guantes de seguridad" },
-                        { key: "safetyGlasses", label: "Lentes de seguridad" },
-                        { key: "safetyHarness", label: "Arnés de seguridad" },
-                      ].map((req) => (
-                        <label
-                          key={req.key}
-                          className="flex items-center gap-1 cursor-pointer text-xs"
-                        >
-                          <Checkbox
-                            checked={
-                              formData.securityRequirements[
-                                req.key as keyof typeof formData.securityRequirements
-                              ]
-                            }
-                            onCheckedChange={() =>
-                              handleSecurityChange(
-                                req.key as keyof typeof formData.securityRequirements
-                              )
-                            }
-                            className="w-3 h-3"
-                          />
-                          {req.label}
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="border-t pt-2">
-                    <p className="font-semibold text-xs mb-1">
-                      Riesgos Identificados:
-                    </p>
-                    <div className="grid grid-cols-2 gap-1">
-                      {[
-                        { key: "electricalRisk", label: "Riesgo Eléctrico" },
-                        { key: "mechanicalRisk", label: "Riesgo Mecánico" },
-                        { key: "chemicalRisk", label: "Riesgo Químico" },
-                      ].map((risk) => (
-                        <label
-                          key={risk.key}
-                          className="flex items-center gap-1 cursor-pointer text-xs"
-                        >
-                          <Checkbox
-                            checked={
-                              formData.securityRequirements[
-                                risk.key as keyof typeof formData.securityRequirements
-                              ]
-                            }
-                            onCheckedChange={() =>
-                              handleSecurityChange(
-                                risk.key as keyof typeof formData.securityRequirements
-                              )
-                            }
-                            className="w-3 h-3"
-                          />
-                          {risk.label}
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label className="text-xs">Otros Riesgos</Label>
-                    <Input
-                      value={formData.otherRisks}
-                      onChange={(e) =>
-                        setFormData({ ...formData, otherRisks: e.target.value })
-                      }
-                      placeholder="Especificar otros riesgos"
-                      className="text-xs h-7"
-                    />
-                  </div>
-                </div>
-              </div>
-            </TabsContent>
-
             {/* TAB 3: DESCRIPCIÓN */}
             <TabsContent
               value="descripcion"
@@ -588,7 +390,6 @@ export function WorkOrderClosingModal({
                 />
               </div>
             </TabsContent>
-
             {/* TAB 4: CIERRE */}
             <TabsContent
               value="cierre"
@@ -631,30 +432,6 @@ export function WorkOrderClosingModal({
               <div className="bg-blue-50 p-2 rounded border border-blue-200 space-y-1">
                 <h4 className="font-semibold text-xs">Tiempos de Ejecución</h4>
                 <div className="grid grid-cols-3 gap-1">
-                  <div>
-                    <Label className="text-xs">Hora de Inicio *</Label>
-                    <Input
-                      type="time"
-                      required
-                      value={formData.startTime}
-                      onChange={(e) =>
-                        setFormData({ ...formData, startTime: e.target.value })
-                      }
-                      className="text-xs h-7"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-xs">Hora Fin *</Label>
-                    <Input
-                      type="time"
-                      required
-                      value={formData.endTime}
-                      onChange={(e) =>
-                        setFormData({ ...formData, endTime: e.target.value })
-                      }
-                      className="text-xs h-7"
-                    />
-                  </div>
                   <div>
                     <Label className="text-xs">Tiempo Total (h)</Label>
                     <Input
@@ -701,39 +478,6 @@ export function WorkOrderClosingModal({
                     placeholder="Nombre"
                     className="text-xs h-7"
                   />
-                </div>
-              </div>
-
-              <div className="bg-gray-50 p-2 rounded border space-y-1">
-                <h4 className="font-semibold text-xs">
-                  Estado Final de la OT *
-                </h4>
-                <div className="flex gap-3 text-xs">
-                  {[
-                    { value: "completado", label: "Completado" },
-                    { value: "pendiente", label: "Pendiente" },
-                  ].map((status) => (
-                    <label
-                      key={status.value}
-                      className="flex items-center gap-1 cursor-pointer"
-                    >
-                      <input
-                        type="radio"
-                        name="finalStatus"
-                        value={status.value}
-                        checked={formData.finalStatus === status.value}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            finalStatus: e.target.value as any,
-                          })
-                        }
-                        className="w-3 h-3"
-                        required
-                      />
-                      {status.label}
-                    </label>
-                  ))}
                 </div>
               </div>
             </TabsContent>

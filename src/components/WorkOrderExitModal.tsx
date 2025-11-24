@@ -311,24 +311,24 @@ export function WorkOrderExitModal({
 
               <div className="grid grid-cols-2 gap-1">
                 <div>
-                  <Label className="text-xs">Nombre del Proy</Label>
+                  <Label className="text-xs">Nombre del Proyecto</Label>
                   <Input
                     value={formData.projectName}
                     onChange={(e) =>
                       setFormData({ ...formData, projectName: e.target.value })
                     }
-                    placeholder="Proy"
+                    placeholder="Proyecto"
                     className="text-xs h-7"
                   />
                 </div>
-                <div>
+                {/* <div>
                   <Label className="text-xs">Orden de Trabajo (OT)</Label>
                   <Input
                     disabled
                     value={workOrder?.id || ""}
                     className="text-xs h-7 bg-gray-100"
                   />
-                </div>
+                </div> */}
               </div>
 
               <div className="bg-purple-50 p-2 rounded border border-purple-200 space-y-1">
@@ -478,7 +478,7 @@ export function WorkOrderExitModal({
                 </div>
               </div>
 
-              <div className="bg-yellow-50 p-2 rounded border border-yellow-200 space-y-1">
+              {/* <div className="bg-yellow-50 p-2 rounded border border-yellow-200 space-y-1">
                 <h4 className="font-semibold text-xs">Tipo de Trabajo</h4>
                 <div className="flex gap-2 text-xs">
                   <label className="flex items-center gap-1 cursor-pointer">
@@ -514,7 +514,7 @@ export function WorkOrderExitModal({
                     Externo
                   </label>
                 </div>
-              </div>
+              </div> */}
 
               {/* <div>
                 <Label className="text-xs">Observaciones</Label>
@@ -761,6 +761,53 @@ export function WorkOrderExitModal({
                       Utilizar guantes resistentes al frío si hay manipulación
                       de CO₂ líquido
                     </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* COLUMNA 4 */}
+              <div className="bg-orange-50 p-2 rounded border border-orange-200 space-y-1">
+                <div className="grid grid-cols-3 gap-2 text-xs">
+                  <h4 className="font-semibold text-xs">
+                    Requisitos para la Ejecución - Seguridad (OT CIERRE)
+                  </h4>
+                  <p className="font-semibold text-xs mb-1">
+                    Requisito de Seguridad:
+                  </p>
+                  <div className="space-y-1">
+                    <label className="flex items-center gap-1">
+                      <Checkbox className="w-3 h-3" /> Aplicar Procedimiento
+                      LOTO (Bloqueo y Etiquetado)
+                    </label>
+
+                    <label className="flex items-center gap-1">
+                      <Checkbox className="w-3 h-3" />
+                      Arnés de seguridad
+                    </label>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="font-semibold text-xs mb-1">
+                      Riesgos Identificados:
+                    </p>
+                    <label className="flex items-center gap-1">
+                      <Checkbox className="w-3 h-3" /> Riesgo Eléctrico
+                    </label>
+
+                    <label className="flex items-center gap-1">
+                      <Checkbox className="w-3 h-3" />
+                      Riesgo Mecánico
+                    </label>
+                    <label className="flex items-center gap-1">
+                      <Checkbox className="w-3 h-3" />
+                      Riesgo Químico
+                    </label>
+                  </div>
+                  <div className="p-2 rounded border space-y-1">
+                    <Label className="text-xs">Otros Riesgos</Label>
+                    <Input
+                      placeholder="Especificar otros riesgos"
+                      className="text-xs h-7"
+                    />
                   </div>
                 </div>
               </div>

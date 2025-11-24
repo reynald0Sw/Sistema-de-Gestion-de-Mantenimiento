@@ -449,6 +449,14 @@ export default function EquipmentCoding() {
           </div>
 
           <div className="overflow-x-auto">
+            <div>
+              <div className="text-sm text-gray-500">
+                AREA: PRODUCCIÓN <strong></strong>
+              </div>
+              <div className="text-sm text-gray-500">
+                LINEA: COCCIÓN<strong></strong>
+              </div>
+            </div>
             <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="bg-gray-100">

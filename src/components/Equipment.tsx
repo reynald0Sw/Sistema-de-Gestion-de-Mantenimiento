@@ -70,7 +70,7 @@ export function Equipment() {
       area: "Compresores",
       location: "Planta - Área de Servicios",
       acquisitionDate: "2019-06-20",
-      status: "operativo",
+      status: "fuera-de-servicio",
       mtbf: 1200,
       mttr: 2.5,
       availability: 97.8,
@@ -87,7 +87,7 @@ export function Equipment() {
       area: "Línea 1",
       location: "Producción - Piso 2",
       acquisitionDate: "2021-01-10",
-      status: "operativo",
+      status: "en-espera",
       mtbf: 850,
       mttr: 3.8,
       availability: 95.2,
@@ -228,6 +228,9 @@ export function Equipment() {
             <TabsTrigger value="equipos">Equipos</TabsTrigger>
             <TabsTrigger value="codificacion">Codificación</TabsTrigger>
             <TabsTrigger value="inventario">Inventario</TabsTrigger>
+            <TabsTrigger value="Planificacion de mantenimiento">
+              Planificacion de Mantenimiento
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="equipos">
@@ -317,6 +320,8 @@ export function Equipment() {
               <EquipmentInventory />
             </div>
           </TabsContent>
+          <TabsContent value="Planificacion de mantenimiento"></TabsContent>
+          <div className="mt-4">{/* <EquipmentMaintenance /> */}</div>
         </Tabs>
       </div>
 
